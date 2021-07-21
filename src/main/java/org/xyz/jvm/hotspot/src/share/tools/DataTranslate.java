@@ -221,4 +221,13 @@ public class DataTranslate {
         out.append("]");
         return out.toString();
     }
+
+    /**
+     * 将byte转成String
+     * @param b byte类型的值
+     * @return 转换后的String
+     * */
+    public static String byteToString(byte b) {
+        return new String(new byte[] {b});
+    }
 }

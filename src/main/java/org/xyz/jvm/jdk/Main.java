@@ -8,7 +8,7 @@ import org.xyz.jvm.hotspot.src.share.vm.oops.InstanceKlass;
 import org.xyz.jvm.hotspot.src.share.vm.oops.MethodInfo;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
         startJvm();
     }
 
@@ -18,6 +18,10 @@ public class Main {
 
         // 找到main方法
         MethodInfo main = JavaNativeInterface.getMethod(klass, "main", "([Ljava/lang/String;)V");
+
+        if (main == null) {
+            return;
+        }
 
         // 创建线程，此处仅为模拟
         JavaThread thread = new JavaThread();

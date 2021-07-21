@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * Java虚拟机栈 栈帧中的集合结构
+ * Java虚拟机栈 栈帧中的集合结构: 操作数栈、局部变量表，它们都是由一个个4字节的槽位组成
  * */
 @Data
 @Slf4j
@@ -32,11 +32,11 @@ public class StackValueCollection {
         return getOperandStack().pop();
     }
     // 入栈
-    private void push(StackValue value) {
+    public void push(StackValue value) {
         getOperandStack().push(value);
     }
     // 查看栈顶元素
-    private StackValue peek() {
+    public StackValue peek() {
         return getOperandStack().peek();
     }
 

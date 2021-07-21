@@ -25,21 +25,21 @@ public class BasicType {
     public static final int T_Throwable = 100;
 
     // 描述符
-    public static final int JVM_SIGNATURE_ARRAY = '[';
-    public static final int JVM_SIGNATURE_BYTE = 'B';
-    public static final int JVM_SIGNATURE_CHAR = 'C';
-    public static final int JVM_SIGNATURE_CLASS = 'L';
-    public static final int JVM_SIGNATURE_ENDCLASS = ';';
-    public static final int JVM_SIGNATURE_ENUM = 'E';
-    public static final int JVM_SIGNATURE_FLOAT = 'F';
-    public static final int JVM_SIGNATURE_DOUBLE = 'D';
-    public static final int JVM_SIGNATURE_FUNC = '(';
-    public static final int JVM_SIGNATURE_ENDFUNC = ')';
-    public static final int JVM_SIGNATURE_INT = 'I';
-    public static final int JVM_SIGNATURE_LONG = 'J';
-    public static final int JVM_SIGNATURE_SHORT = 'S';
-    public static final int JVM_SIGNATURE_VOID = 'V';
-    public static final int JVM_SIGNATURE_BOOLEAN = 'Z';
+    public static final byte JVM_SIGNATURE_ARRAY = '[';
+    public static final byte JVM_SIGNATURE_BYTE = 'B';
+    public static final byte JVM_SIGNATURE_CHAR = 'C';
+    public static final byte JVM_SIGNATURE_CLASS = 'L';
+    public static final byte JVM_SIGNATURE_END_CLASS = ';';
+    public static final byte JVM_SIGNATURE_ENUM = 'E';
+    public static final byte JVM_SIGNATURE_FLOAT = 'F';
+    public static final byte JVM_SIGNATURE_DOUBLE = 'D';
+    public static final byte JVM_SIGNATURE_START_FUNC = '(';
+    public static final byte JVM_SIGNATURE_END_FUNC = ')';
+    public static final byte JVM_SIGNATURE_INT = 'I';
+    public static final byte JVM_SIGNATURE_LONG = 'J';
+    public static final byte JVM_SIGNATURE_SHORT = 'S';
+    public static final byte JVM_SIGNATURE_VOID = 'V';
+    public static final byte JVM_SIGNATURE_BOOLEAN = 'Z';
 
     // 访问权限
     public static final int JVM_ACC_PUBLIC = 0x0001;

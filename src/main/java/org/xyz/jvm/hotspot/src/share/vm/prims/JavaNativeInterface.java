@@ -38,6 +38,10 @@ public class JavaNativeInterface {
         return null;
     }
 
+    /**
+     * 调用静态方法
+     * @param method 被调用的方法信息
+     * */
     public static void callStaticMethod(MethodInfo method) {
         // 获取当前线程
         JavaThread currentThread = Threads.currentThread();

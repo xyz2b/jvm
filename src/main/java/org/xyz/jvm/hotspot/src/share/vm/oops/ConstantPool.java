@@ -53,6 +53,15 @@ public class ConstantPool {
     }
 
     /**
+     * @param index 常量池的索引
+     * @return 对应索引处的常量池项的类型tag
+     * */
+    public int getTag(int index) {
+        if (!checkIndex(index)) return -1;
+        return tag[index];
+    }
+
+    /**
      * @param index Utf8 结构在常量池中的索引
      * @return Utf8 结构存储的字符串值
      * */

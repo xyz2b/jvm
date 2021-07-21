@@ -85,9 +85,12 @@ public class BootClassLoader {
             return klass;
         }
 
+        // 读取并解析Class文件
         klass = readAndParse(className);
 
+        // 是否立刻解析
         if (resolve) {
+            // 解析
             resolveKlass();
         }
 
