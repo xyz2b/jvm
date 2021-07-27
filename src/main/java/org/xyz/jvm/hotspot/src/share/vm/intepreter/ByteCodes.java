@@ -127,8 +127,23 @@ public class ByteCodes {
 
     public static final int IINC = 132;     // 0x84
 
-    // 将栈顶int类型强制转为double类型，并将结果压入栈
-    public static final int I2D = 135;      // 0x87
+
+    public static final int I2L = 133;      // 0x85
+    public static final int I2F = 134;      // 0x86
+    public static final int I2D = 135;      // 0x87     // 将栈顶int类型强制转为double类型，并将结果压入栈
+    public static final int L2I = 136;      // 0x88
+    public static final int L2F = 137;      // 0x89
+    public static final int L2D = 138;      // 0x8a
+    public static final int F2I = 139;      // 0x8b
+    public static final int F2L = 140;      // 0x8c
+    public static final int F2D = 141;      // 0x8d
+    public static final int D2I = 142;      // 0x8e
+    public static final int D2L = 143;      // 0x8f
+    public static final int D2F = 144;      // 0x90
+    public static final int I2B = 145;      // 0x91
+    public static final int I2C = 146;      // 0x92
+    public static final int I2S = 147;      // 0x93
+
 
     public static final int IF_ICMPEQ = 159;    // 0x9f
     public static final int IF_ICMPNE = 160;    // 0xa0

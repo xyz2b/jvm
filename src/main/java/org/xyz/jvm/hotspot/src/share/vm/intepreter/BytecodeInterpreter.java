@@ -222,6 +222,11 @@ public class BytecodeInterpreter {
                     ldc2W(currentThread, code);
                     break;
                 }
+                case ByteCodes.LDC_W: {
+                    log.info("执行指令: ldc_w，该指令功能为: 从运行时常量池中提取int类型或float类型的运行时常量、字符串字面量，或者一个指向类、方法类型或方法句柄的符号引用 的数据并压入操作数栈（宽索引）中");
+                    ldcW(currentThread, code);
+                    break;
+                }
                 case ByteCodes.LLOAD: {
                     log.info("执行指令: lload，该指令功能为: 将局部变量表中对应索引（操作数中给出）位置的值（long类型）压入操作数栈中");
                     lLoad(currentThread, code);
@@ -342,10 +347,355 @@ public class BytecodeInterpreter {
                     dStore3(currentThread, code);
                     break;
                 }
+                case ByteCodes.I2L: {
+                    log.info("执行指令: i2l，该指令功能为: 将栈顶int类型数值强制转换成long类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    i2l(currentThread, code);
+                    break;
+                }
+                case ByteCodes.I2F: {
+                    log.info("执行指令: i2f，该指令功能为: 将栈顶int类型数值强制转换成float类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    i2f(currentThread, code);
+                    break;
+                }
+                case ByteCodes.I2D: {
+                    log.info("执行指令: i2d，该指令功能为: 将栈顶int类型数值强制转换成double类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    i2d(currentThread, code);
+                    break;
+                }
+                case ByteCodes.I2B: {
+                    log.info("执行指令: i2b，该指令功能为: 将栈顶int类型数值强制转换成byte类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    i2b(currentThread, code);
+                    break;
+                }
+                case ByteCodes.I2C: {
+                    log.info("执行指令: i2c，该指令功能为: 将栈顶int类型数值强制转换成char类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    i2c(currentThread, code);
+                    break;
+                }
+                case ByteCodes.I2S: {
+                    log.info("执行指令: i2s，该指令功能为: 将栈顶int类型数值强制转换成short类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    i2s(currentThread, code);
+                    break;
+                }
+                case ByteCodes.L2I: {
+                    log.info("执行指令: l2i，该指令功能为: 将栈顶long类型数值强制转换成int类型数值并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    l2i(currentThread, code);
+                    break;
+                }
+                case ByteCodes.L2F: {
+                    log.info("执行指令: l2f，该指令功能为: 将栈顶long类型数值强制转换成float类型数值并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    l2f(currentThread, code);
+                    break;
+                }
+                case ByteCodes.L2D: {
+                    log.info("执行指令: l2d，该指令功能为: 将栈顶long类型数值强制转换成double类型数值并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    l2d(currentThread, code);
+                    break;
+                }
+                case ByteCodes.F2I: {
+                    log.info("执行指令: f2i，该指令功能为: 将栈顶float类型数值强制转换成int类型数值并将结果压入栈顶（需要将float类型先从栈中弹出）");
+                    f2i(currentThread, code);
+                    break;
+                }
+                case ByteCodes.F2L: {
+                    log.info("执行指令: f2l，该指令功能为: 将栈顶float类型数值强制转换成long类型数值并将结果压入栈顶（需要将float类型先从栈中弹出）");
+                    f2l(currentThread, code);
+                    break;
+                }
+                case ByteCodes.F2D: {
+                    log.info("执行指令: f2d，该指令功能为: 将栈顶float类型数值强制转换成double类型数值并将结果压入栈顶（需要将float类型先从栈中弹出）");
+                    f2d(currentThread, code);
+                    break;
+                }
+                case ByteCodes.D2I: {
+                    log.info("执行指令: d2i，该指令功能为: 将栈顶double类型数值强制转换成int类型数值并将结果压入栈顶（需要将double类型先从栈中弹出）");
+                    d2i(currentThread, code);
+                    break;
+                }
+                case ByteCodes.D2L: {
+                    log.info("执行指令: d2l，该指令功能为: 将栈顶double类型数值强制转换成long类型数值并将结果压入栈顶（需要将double类型先从栈中弹出）");
+                    d2l(currentThread, code);
+                    break;
+                }
+                case ByteCodes.D2F: {
+                    log.info("执行指令: d2f，该指令功能为: 将栈顶double类型数值强制转换成float类型数值并将结果压入栈顶（需要将double类型先从栈中弹出）");
+                    d2f(currentThread, code);
+                    break;
+                }
                 default:
                     throw new Error("暂不支持该指令: " + opcode);
             }
         }
+    }
+
+    /**
+     * 执行i2s字节码指令
+     * 该指令功能为: 将栈顶int类型数值强制转换成short类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void i2s(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        short value = (short) ((int) stack.pop().getData());
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_SHORT, value));
+    }
+
+    /**
+     * 执行i2c字节码指令
+     * 该指令功能为: 将栈顶int类型数值强制转换成char类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void i2c(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        char value = (char) ((int) stack.pop().getData());
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_CHAR, value));
+    }
+
+    /**
+     * 执行i2b字节码指令
+     * 该指令功能为: 将栈顶int类型数值强制转换成byte类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void i2b(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        byte value = (byte) ((int) stack.pop().getData());
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_BYTE, value));
+    }
+
+    /**
+     * 执行d2f字节码指令
+     * 该指令功能为: 将栈顶double类型数值强制转换成float类型数值并将结果压入栈顶（需要将double类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void d2f(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        float value =  (float) stack.popDouble();
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_FLOAT, value));
+    }
+
+    /**
+     * 执行d2l字节码指令
+     * 该指令功能为: 将栈顶double类型数值强制转换成long类型数值并将结果压入栈顶（需要将double类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void d2l(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        long value =  (long) stack.popDouble();
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, value));
+    }
+
+    /**
+     * 执行d2i字节码指令
+     * 该指令功能为: 将栈顶double类型数值强制转换成int类型数值并将结果压入栈顶（需要将double类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void d2i(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        int value =  (int) stack.popDouble();
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, value));
+    }
+
+    /**
+     * 执行f2d字节码指令
+     * 该指令功能为: 将栈顶float类型数值强制转换成double类型数值并将结果压入栈顶（需要将float类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void f2d(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        double value =  (float) stack.pop().getData();
+        // 将结果压入栈中
+        stack.pushDouble(value);
+    }
+
+    /**
+     * 执行f2l字节码指令
+     * 该指令功能为: 将栈顶float类型数值强制转换成long类型数值并将结果压入栈顶（需要将float类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void f2l(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        long value = (long) ((float) stack.pop().getData());
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, value));
+    }
+
+    /**
+     * 执行f2i字节码指令
+     * 该指令功能为: 将栈顶float类型数值强制转换成int类型数值并将结果压入栈顶（需要将float类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void f2i(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        int value = (int) ((float) stack.pop().getData());
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, value));
+    }
+
+    /**
+     * 执行l2d字节码指令
+     * 该指令功能为: 将栈顶long类型数值强制转换成double类型数值并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void l2d(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        double value = (double) ((long) stack.pop().getData());
+        // 将结果压入栈中
+        stack.pushDouble(value);
+    }
+
+    /**
+     * 执行l2f字节码指令
+     * 该指令功能为: 将栈顶long类型数值强制转换成float类型数值并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void l2f(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        float value = (float) ((long) stack.pop().getData());
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_FLOAT, value));
+    }
+
+    /**
+     * 执行l2i字节码指令
+     * 该指令功能为: 将栈顶long类型数值强制转换成int类型数值并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void l2i(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        int value = (int) ((long) stack.pop().getData());
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, value));
+    }
+
+    /**
+     * 执行i2d字节码指令
+     * 该指令功能为: 将栈顶int类型数值强制转换成double类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void i2d(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        double value = (int) stack.pop().getData();
+        // 将结果压入栈中
+        stack.pushDouble(value);
+    }
+
+    /**
+     * 执行i2f字节码指令
+     * 该指令功能为: 将栈顶int类型数值强制转换成float类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void i2f(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        float value = (int) stack.pop().getData();
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_FLOAT, value));
+    }
+
+    /**
+     * 执行i2l字节码指令
+     * 该指令功能为: 将栈顶int类型数值强制转换成long类型数值并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void i2l(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        long value = (int) stack.pop().getData();
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, value));
     }
 
     /**
@@ -872,6 +1222,7 @@ public class BytecodeInterpreter {
             case ConstantPool.JVM_CONSTANT_String: {
                 String s = constantPool.getString(operand);
                 stack.push(new StackValue(BasicType.T_OBJECT, s));
+                break;
             }
             case ConstantPool.JVM_CONSTANT_Class: {
                 String className = constantPool.getClassName(operand);
