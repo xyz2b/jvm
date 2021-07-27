@@ -443,7 +443,8 @@ public class BytecodeInterpreter {
         // 取出栈顶元素
         short value = (short) ((int) stack.pop().getData());
         // 将结果压入栈中
-        stack.push(new StackValue(BasicType.T_SHORT, value));
+        // 在JVM中，小于4字节的数据类型都是以4字节进行存储的，即小于4字节的数据类型都是以int类型存储的
+        stack.push(new StackValue(BasicType.T_INT, value));
     }
 
     /**
@@ -461,7 +462,8 @@ public class BytecodeInterpreter {
         // 取出栈顶元素
         char value = (char) ((int) stack.pop().getData());
         // 将结果压入栈中
-        stack.push(new StackValue(BasicType.T_CHAR, value));
+        // 在JVM中，小于4字节的数据类型都是以4字节进行存储的，即小于4字节的数据类型都是以int类型存储的
+        stack.push(new StackValue(BasicType.T_INT, value));
     }
 
     /**
@@ -479,7 +481,8 @@ public class BytecodeInterpreter {
         // 取出栈顶元素
         byte value = (byte) ((int) stack.pop().getData());
         // 将结果压入栈中
-        stack.push(new StackValue(BasicType.T_BYTE, value));
+        // 在JVM中，小于4字节的数据类型都是以4字节进行存储的，即小于4字节的数据类型都是以int类型存储的
+        stack.push(new StackValue(BasicType.T_INT, value));
     }
 
     /**
