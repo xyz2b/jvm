@@ -1,12 +1,14 @@
 package org.xyz.jvm.hotspot.src.share.vm.runtime;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.xyz.jvm.hotspot.src.share.vm.oops.MethodInfo;
 
 /**
  * Java线程虚拟机栈中的方法栈帧
  * */
 @Data
+@Slf4j
 public class JavaVFrame extends VFrame {
     // 栈帧中的局部变量表
     private StackValueCollection localVariableTable;

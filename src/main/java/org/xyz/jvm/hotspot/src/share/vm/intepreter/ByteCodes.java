@@ -5,14 +5,25 @@ package org.xyz.jvm.hotspot.src.share.vm.intepreter;
  * */
 public class ByteCodes {
     public static final int ILLEGAL = -1;
-    public static final int NOP = 0;
+
+    public static final int NOP = 0;    // 0x00
+
     public static final int ACONST_NULL = 1;    // 0x01
+
+    public static final int ICONST_M1 = 2;   // 0x02
     public static final int ICONST_0 = 3;   // 0x03
     public static final int ICONST_1 = 4;   // 0x04
     public static final int ICONST_2 = 5;   // 0x05
     public static final int ICONST_3 = 6;   // 0x06
     public static final int ICONST_4 = 7;   // 0x07
     public static final int ICONST_5 = 8;   // 0x08
+
+    public static final int LCONST_0 = 9;   // 0x09
+    public static final int LCONST_1 = 10;   // 0x0a
+
+    public static final int FCONST_0 = 11;   // 0x0b
+    public static final int FCONST_1 = 12;   // 0x0c
+    public static final int FCONST_2 = 13;   // 0x0e
 
     public static final int DCONST_0 = 14;   // 0x0e
     public static final int DCONST_1 = 15;   // 0x0f
@@ -25,11 +36,20 @@ public class ByteCodes {
     public static final int LDC2_W = 20;    // 0x14
 
     public static final int ILOAD = 21;   // 0x15
+    public static final int LLOAD = 22;   // 0x16
+    public static final int FLOAD = 23;   // 0x17
+    public static final int DLOAD = 24;   // 0x18
+    public static final int ALOAD = 25;   // 0x19
 
     public static final int ILOAD_0 = 26;   // 0x1a
     public static final int ILOAD_1 = 27;   // 0x1b
     public static final int ILOAD_2 = 28;   // 0x1c
     public static final int ILOAD_3 = 29;   // 0x1d
+
+    public static final int LLOAD_0 = 30;   // 0x1e
+    public static final int LLOAD_1 = 31;   // 0x1f
+    public static final int LLOAD_2 = 32;   // 0x20
+    public static final int LLOAD_3 = 33;   // 0x21
 
     public static final int FLOAD_0 = 34;   // 0x22
     public static final int FLOAD_1 = 35;   // 0x23
@@ -55,12 +75,21 @@ public class ByteCodes {
     public static final int CALOAD = 52;    // 0x34
     public static final int SALOAD = 53;    // 0x35
 
+    public static final int ISTORE = 54;  // 0x36
+    public static final int LSTORE = 55; // 0x37
+    public static final int FSTORE = 56; // 0x38
     public static final int DSTORE = 57;  // 0x39
+    public static final int ASTORE = 58;  // 0x3a
 
     public static final int ISTORE_0 = 59;  // 0x3b
     public static final int ISTORE_1 = 60;  // 0x3c
     public static final int ISTORE_2 = 61;  // 0x3d
     public static final int ISTORE_3 = 62;  // 0x3e
+
+    public static final int LSTORE_0 = 63; // 0x3f
+    public static final int LSTORE_1 = 64; // 0x40
+    public static final int LSTORE_2 = 65; // 0x41
+    public static final int LSTORE_3 = 66; // 0x42
 
     public static final int FSTORE_0 = 67; // 0x43
     public static final int FSTORE_1 = 68; // 0x44
@@ -76,11 +105,18 @@ public class ByteCodes {
     public static final int ASTORE_1 = 76; // 0x4c
     public static final int ASTORE_2 = 77; // 0x4d
     public static final int ASTORE_3 = 78; // 0x4e
+
     public static final int IASTORE = 79; // 0x4f
     public static final int LASTORE = 80; // 0x50
     public static final int FASTORE = 81; // 0x51
     public static final int DASTORE = 82; // 0x52
     public static final int AASTORE = 83; // 0x53
+    public static final int BASTORE = 84; // 0x54
+    public static final int CASTORE = 85; // 0x55
+    public static final int SASTORE = 86; // 0x56
+
+    public static final int POP = 87; // 0x57
+    public static final int POP2 = 88; // 0x58
 
     public static final int DUP = 89;       // 0x59
 

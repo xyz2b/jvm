@@ -23,7 +23,8 @@ public class BaseBytecodeStream extends StackObj {
     protected byte[] codes;
 
     /**
-     * 一次读取一字节的数据，读取指针自动累加
+     * 一次读取一字节的数据，并转成int类型
+     * 读取指针自动累加
      * 字节码指令都是单字节的，所以每个字节码指令都对应一个255以内的数值，如 ldc(助记符) 为 18
      * @return 读取的数据
      * */
@@ -34,7 +35,8 @@ public class BaseBytecodeStream extends StackObj {
     }
 
     /**
-     * 一次读取两字节的数据，读取指针自动累加
+     * 一次读取两字节的数据，并转成short类型
+     * 读取指针自动累加
      * @return 读取的数据
      * */
     public short getUnsignedShort() {

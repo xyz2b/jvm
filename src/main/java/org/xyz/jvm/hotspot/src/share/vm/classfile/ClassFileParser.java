@@ -699,10 +699,14 @@ public class ClassFileParser {
                 }
                 case ConstantPool.JVM_CONSTANT_Long: {
                     index = parseJvmConstantLong(content, klass, index, i);
+                    // 因为long在常量池中占两个槽位，上面解析是一次解析合并完成的，所以之后需要将遍历索引自增1
+                    i++;
                     break;
                 }
                 case ConstantPool.JVM_CONSTANT_Double: {
                     index = parseJvmConstantDouble(content, klass, index, i);
+                    // 因为double在常量池中占两个槽位，上面解析是一次解析合并完成的，所以之后需要将遍历索引自增1
+                    i++;
                     break;
                 }
                 case ConstantPool.JVM_CONSTANT_String: {
@@ -730,7 +734,7 @@ public class ClassFileParser {
                     break;
                 }
                 default:
-                    throw new Error("无法识别的常量池项");
+                    throw new Error("无法识别的常量池项: " + tag);
             }
         }
 

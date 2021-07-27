@@ -76,9 +76,7 @@ public class DescriptorStream extends ResourceObj {
 
                 break;
             case BasicType.T_ARRAY:
-                frame.getOperandStack().push(new StackValue(BasicType.T_OBJECT, o));
-
-                break;
+                throw new Error("无法识别数组类型");
             default:
                 throw new Error("无法识别的参数类型");
         }
@@ -95,53 +93,59 @@ public class DescriptorStream extends ResourceObj {
             DescriptorInfo info = getParameters().get(i);
 
             switch (info.getType()) {
+                // boolean、byte、char、short压入操作数栈时，都是压入的int类型的值，所以从操作数栈中获取的都是对应的int类型的值，需要转换一下
+
                 // 如果形参类型为boolean类型，从操作数栈中弹出boolean类型的值
                 case BasicType.T_BOOLEAN:
-                    values[i] = (boolean) frame.getOperandStack().pop().getObject();
+                    values[i] = (int) frame.getOperandStack().pop().getData() == 1;
                     break;
 
                 // 如果形参类型为byte类型，从操作数栈中弹出byte类型的值
                 case BasicType.T_BYTE:
-                    values[i] = (byte) frame.getOperandStack().pop().getObject();
+                    values[i] = (byte) ((int) frame.getOperandStack().pop().getData());
                     break;
 
                 // 如果形参类型为char类型，从操作数栈中弹出char类型的值
                 case BasicType.T_CHAR:
-                    values[i] = (char) frame.getOperandStack().pop().getObject();
+                    values[i] = (char) ((int) frame.getOperandStack().pop().getData());
                     break;
 
                 // 如果形参类型为short类型，从操作数栈中弹出short类型的值
                 case BasicType.T_SHORT:
-                    values[i] = (short) frame.getOperandStack().pop().getObject();
+                    values[i] = (short) ((int) frame.getOperandStack().pop().getData());
                     break;
 
                 // 如果形参类型为int类型，从操作数栈中弹出int类型的值
                 case BasicType.T_INT:
-                    values[i] = (int) frame.getOperandStack().pop().getObject();
+                    values[i] = (int) frame.getOperandStack().pop().getData();
+                    break;
+
+                // 如果形参类型为int类型，从操作数栈中弹出int类型的值
+                case BasicType.T_FLOAT:
+                    values[i] = (float) frame.getOperandStack().pop().getData();
                     break;
 
                 // 如果形参类型为long类型，从操作数栈中弹出long类型的值
                 case BasicType.T_LONG:
-                    values[i] = (long) frame.getOperandStack().pop().getObject();
+                    values[i] = (long) frame.getOperandStack().pop().getData();
                     break;
 
                 // 如果形参类型为double类型，从操作数栈中弹出double类型的值
                 case BasicType.T_DOUBLE:
-                    values[i] = (double) frame.getOperandStack().pop().getObject();
+                    values[i] = (double) frame.getOperandStack().popDouble();
                     break;
 
                 // 如果形参类型为引用类型，从操作数栈中弹出引用类型的值
                 case BasicType.T_OBJECT:
-                    values[i] = frame.getOperandStack().pop().getObject();
+                    values[i] = frame.getOperandStack().pop().getData();
                     break;
 
-                // 如果形参类型为数组类型，从操作数栈中弹出数组类型的值
+                // 如果形参类型为数组类型
                 case BasicType.T_ARRAY:
-                    values[i] = frame.getOperandStack().pop().getObject();
-                    break;
-
+                    // TODO: 支持从操作数栈中弹出数组类型的值
+                    throw new Error("无法识别数组类型");
                 default:
-                    throw new Error("无法识别的参数类型");
+                    throw new Error("无法识别的参数类型: " + info.getType());
             }
         }
 
@@ -258,9 +262,15 @@ public class DescriptorStream extends ResourceObj {
                             // 描述符为 "[Ljava/lang/String;"（[数量根据维度来，具体数组类型根据引用类型来，这里只是举例）
                             case BasicType.T_OBJECT: {
                                 // 如果数组元素的类型为引用类型，则引用类型存储在数组的arrayElementType(DescriptorInfo)中的typeDesc中
-                                types[i] = Class.forName(arrayPrefix + DataTranslate.byteToString(BasicType.JVM_SIGNATURE_CLASS) +
-                                        info.getArrayElementType().getTypeDesc().replace("/", ".") +
-                                        DataTranslate.byteToString(BasicType.JVM_SIGNATURE_END_CLASS));
+                                // 引用类型为JVM本身系统加载的类（即java开头的），通过反射
+                                if (info.getArrayElementType().getTypeDesc().startsWith("java")) {
+                                    types[i] = Class.forName(arrayPrefix + DataTranslate.byteToString(BasicType.JVM_SIGNATURE_CLASS) +
+                                            info.getArrayElementType().getTypeDesc().replace("/", ".") +
+                                            DataTranslate.byteToString(BasicType.JVM_SIGNATURE_END_CLASS));
+                                } else {    // TODO: 自己加载器加载的类（非java开头的）
+
+                                }
+
                                 break;
                             }
                         }

@@ -8,13 +8,13 @@ import org.xyz.jvm.hotspot.src.share.vm.oops.InstanceKlass;
 import org.xyz.jvm.hotspot.src.share.vm.oops.MethodInfo;
 
 public class Main {
-    public static void main(String[] args) throws ClassNotFoundException {
+    public static void main(String[] args) {
         startJvm();
     }
 
     public static void startJvm() {
         // 通过BootClassLoader加载main函数所在的类
-        InstanceKlass klass = BootClassLoader.loadMainClass("org.xyz.jvm.example.HelloWorld");
+        InstanceKlass klass = BootClassLoader.loadMainClass("org.xyz.jvm.example.basictype.PrintDouble");
 
         // 找到main方法
         MethodInfo main = JavaNativeInterface.getMethod(klass, "main", "([Ljava/lang/String;)V");
