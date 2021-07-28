@@ -119,11 +119,60 @@ public class ByteCodes {
     public static final int POP2 = 88; // 0x58
 
     public static final int DUP = 89;       // 0x59
+    public static final int DUP_X1 = 90;       // 0x5a
+    public static final int DUP_X2 = 91;       // 0x5b
+    public static final int DUP2 = 92;       // 0x5c
+    public static final int DUP2_X1 = 93;       // 0x5d
+    public static final int DUP2_X2 = 94;       // 0x5e
+    public static final int SWAP = 95;       // 0x5f
 
     public static final int IADD = 96;      // 0x60
     public static final int LADD = 97;      // 0x61
     public static final int FADD = 98;      // 0x62
     public static final int DADD = 99;      // 0x63
+
+    public static final int ISUB = 100;      // 0x64
+    public static final int LSUB = 101;      // 0x65
+    public static final int FSUB = 102;      // 0x66
+    public static final int DSUB = 103;      // 0x67
+
+    public static final int IMUL = 104;      // 0x68
+    public static final int LMUL = 105;      // 0x69
+    public static final int FMUL = 106;      // 0x6a
+    public static final int DMUL = 107;      // 0x6b
+
+    public static final int IDIV = 108;      // 0x6c
+    public static final int LDIV = 109;      // 0x6d
+    public static final int FDIV = 110;      // 0x6e
+    public static final int DDIV = 111;      // 0x6f
+
+    public static final int IREM = 112;      // 0x70
+    public static final int LREM = 113;      // 0x71
+    public static final int FREM = 114;      // 0x72
+    public static final int DREM = 115;      // 0x73
+
+    public static final int INEG = 116;      // 0x74
+    public static final int LNEG = 117;      // 0x75
+    public static final int FNEG = 118;      // 0x76
+    public static final int DNEG = 119;      // 0x77
+
+    public static final int ISHL = 120;      // 0x78
+    public static final int LSHL = 121;      // 0x79
+
+    public static final int ISHR = 122;      // 0x7a
+    public static final int LSHR = 123;      // 0x7b
+
+    public static final int IUSHR = 124;      // 0x7c
+    public static final int LUSHR = 125;      // 0x7d
+
+    public static final int IAND = 126;      // 0x7e
+    public static final int LAND = 127;      // 0x7f
+
+    public static final int IOR = 128;      // 0x80
+    public static final int LOR = 129;      // 0x81
+
+    public static final int IXOR = 130;      // 0x82
+    public static final int LXOR = 131;      // 0x83
 
     public static final int IINC = 132;     // 0x84
 

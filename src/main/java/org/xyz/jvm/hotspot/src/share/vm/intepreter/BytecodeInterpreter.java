@@ -37,6 +37,10 @@ public class BytecodeInterpreter {
             int opcode = code.getU1Code();
 
             switch (opcode) {
+                case ByteCodes.NOP: {
+                    log.info("执行指令: nop，该指令功能: 什么也不做");
+                    break;
+                }
                 case ByteCodes.LDC: {
                     log.info("执行指令: ldc，该指令功能为: 从运行时常量池中提取数据并压入操作数栈");
                     ldc(currentThread, code);
@@ -422,10 +426,1807 @@ public class BytecodeInterpreter {
                     d2f(currentThread, code);
                     break;
                 }
+                case ByteCodes.IADD: {
+                    log.info("执行指令: iadd，该指令功能为: 将栈顶两个int类型数值相加并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iAdd(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LADD: {
+                    log.info("执行指令: ladd，该指令功能为: 将栈顶两个long类型数值相加并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lAdd(currentThread, code);
+                    break;
+                }
+                case ByteCodes.FADD: {
+                    log.info("执行指令: fadd，该指令功能为: 将栈顶两个float类型数值相加并将结果压入栈顶（需要将float类型先从栈中弹出）");
+                    fAdd(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DADD: {
+                    log.info("执行指令: dadd，该指令功能为: 将栈顶两个double类型数值相加并将结果压入栈顶（需要将double类型先从栈中弹出）");
+                    dAdd(currentThread, code);
+                    break;
+                }
+                case ByteCodes.ISUB: {
+                    log.info("执行指令: isub，该指令功能为: 将栈顶两个int类型数值相减并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iSub(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LSUB: {
+                    log.info("执行指令: lsub，该指令功能为: 将栈顶两个long类型数值相减并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lSub(currentThread, code);
+                    break;
+                }
+                case ByteCodes.FSUB: {
+                    log.info("执行指令: fsub，该指令功能为: 将栈顶两个float类型数值相减并将结果压入栈顶（需要将float类型先从栈中弹出）");
+                    fSub(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DSUB: {
+                    log.info("执行指令: dsub，该指令功能为: 将栈顶两个double类型数值相减并将结果压入栈顶（需要将double类型先从栈中弹出）");
+                    dSub(currentThread, code);
+                    break;
+                }
+                case ByteCodes.IMUL: {
+                    log.info("执行指令: imul，该指令功能为: 将栈顶两个int类型数值相乘并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iMul(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LMUL: {
+                    log.info("执行指令: lmul，该指令功能为: 将栈顶两个long类型数值相乘并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lMul(currentThread, code);
+                    break;
+                }
+                case ByteCodes.FMUL: {
+                    log.info("执行指令: fmul，该指令功能为: 将栈顶两个float类型数值相乘并将结果压入栈顶（需要将float类型先从栈中弹出）");
+                    fMul(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DMUL: {
+                    log.info("执行指令: dmul，该指令功能为: 将栈顶两个double类型数值相乘并将结果压入栈顶（需要将double类型先从栈中弹出）");
+                    dMul(currentThread, code);
+                    break;
+                }
+                case ByteCodes.IDIV: {
+                    log.info("执行指令: idiv，该指令功能为: 将栈顶两个int类型数值相除并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iDiv(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LDIV: {
+                    log.info("执行指令: ldiv，该指令功能为: 将栈顶两个long类型数值相除并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lDiv(currentThread, code);
+                    break;
+                }
+                case ByteCodes.FDIV: {
+                    log.info("执行指令: fdiv，该指令功能为: 将栈顶两个float类型数值相除并将结果压入栈顶（需要将float类型先从栈中弹出）");
+                    fDiv(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DDIV: {
+                    log.info("执行指令: ddiv，该指令功能为: 将栈顶两个double类型数值相除并将结果压入栈顶（需要将double类型先从栈中弹出）");
+                    dDiv(currentThread, code);
+                    break;
+                }
+                case ByteCodes.IREM: {
+                    log.info("执行指令: irem，该指令功能为: 将栈顶两个int类型数值取模并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iRem(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LREM: {
+                    log.info("执行指令: lrem，该指令功能为: 将栈顶两个long类型数值取模并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lRem(currentThread, code);
+                    break;
+                }
+                case ByteCodes.FREM: {
+                    log.info("执行指令: frem，该指令功能为: 将栈顶两个float类型数值取模并将结果压入栈顶（需要将float类型先从栈中弹出）");
+                    fRem(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DREM: {
+                    log.info("执行指令: drem，该指令功能为: 将栈顶两个double类型数值取模并将结果压入栈顶（需要将double类型先从栈中弹出）");
+                    dRem(currentThread, code);
+                    break;
+                }
+                case ByteCodes.INEG: {
+                    log.info("执行指令: ineg，该指令功能为: 将栈顶int类型数值取负并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iNeg(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LNEG: {
+                    log.info("执行指令: lneg，该指令功能为: 将栈顶long类型数值取负并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lNeg(currentThread, code);
+                    break;
+                }
+                case ByteCodes.FNEG: {
+                    log.info("执行指令: fneg，该指令功能为: 将栈顶float类型数值取负并将结果压入栈顶（需要将float类型先从栈中弹出）");
+                    fNeg(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DNEG: {
+                    log.info("执行指令: dneg，该指令功能为: 将栈顶double类型数值取负并将结果压入栈顶（需要将double类型先从栈中弹出）");
+                    dNeg(currentThread, code);
+                    break;
+                }
+                case ByteCodes.ISHL: {
+                    log.info("执行指令: ishl，该指令功能为: 将栈顶int类型数值左移指定位数并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iShl(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LSHL: {
+                    log.info("执行指令: lshl，该指令功能为: 将栈顶long类型数值左移指定位数并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lShl(currentThread, code);
+                    break;
+                }
+                case ByteCodes.ISHR: {
+                    log.info("执行指令: ishr，该指令功能为: 将栈顶int类型数值（有符号）右移指定位数并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iShr(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LSHR: {
+                    log.info("执行指令: lshr，该指令功能为: 将栈顶long类型数值（有符号）右移指定位数并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lShr(currentThread, code);
+                    break;
+                }
+                case ByteCodes.IUSHR: {
+                    log.info("执行指令: iushr，该指令功能为: 将栈顶int类型数值（无符号）右移指定位数并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iUShr(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LUSHR: {
+                    log.info("执行指令: lushr，该指令功能为: 将栈顶long类型数值（无符号）右移指定位数并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lUShr(currentThread, code);
+                    break;
+                }
+                case ByteCodes.IAND: {
+                    log.info("执行指令: iand，该指令功能为: 将栈顶两个int类型数值按位与并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iAnd(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LAND: {
+                    log.info("执行指令: land，该指令功能为: 将栈顶两个long类型数值按位与并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lAnd(currentThread, code);
+                    break;
+                }
+                case ByteCodes.IOR: {
+                    log.info("执行指令: ior，该指令功能为: 将栈顶两个int类型数值按位或并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iOr(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LOR: {
+                    log.info("执行指令: lor，该指令功能为: 将栈顶两个long类型数值按位或并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lOr(currentThread, code);
+                    break;
+                }
+                case ByteCodes.IXOR: {
+                    log.info("执行指令: ixor，该指令功能为: 将栈顶两个int类型数值按位异或并将结果压入栈顶（需要将int类型先从栈中弹出）");
+                    iXor(currentThread, code);
+                    break;
+                }
+                case ByteCodes.LXOR: {
+                    log.info("执行指令: lxor，该指令功能为: 将栈顶两个long类型数值按位异或并将结果压入栈顶（需要将long类型先从栈中弹出）");
+                    lXor(currentThread, code);
+                    break;
+                }
+                case ByteCodes.IINC: {
+                    log.info("执行指令: iinc，该指令功能为: 将局部变量表中指定的int类型变量增加指定值（i++、i--、i+=2）（操作数1: 局部变量表中的索引，操作数2: 增加的常量值）");
+                    iInc(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DUP: {
+                    log.info("执行指令: dup，该指令功能为: 复制操作数栈顶的值，并插入到栈顶（不弹出栈顶的值）");
+                    dup(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DUP_X1: {
+                    log.info("执行指令: dup_x1，该指令功能为: 复制操作数栈顶的值，并插入到栈顶两个元素之后（不弹出栈顶的值）");
+                    dupX1(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DUP_X2: {
+                    log.info("执行指令: dup_x2，该指令功能为: 复制操作数栈顶的值，并插入到栈顶两个或三个元素之后（不弹出栈顶的值）");
+                    dupX2(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DUP2: {
+                    log.info("执行指令: dup2，该指令功能为: 复制操作数栈顶1个或2个值，并插入到栈顶（不弹出栈顶的值）");
+                    dup2(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DUP2_X1: {
+                    log.info("执行指令: dup2_x1，该指令功能为: 复制操作数栈顶1个或2个值，并插入栈顶以下2个或3个值之后（不弹出栈顶的值）");
+                    dup2X1(currentThread, code);
+                    break;
+                }
+                case ByteCodes.DUP2_X2: {
+                    log.info("执行指令: dup2_x2，该指令功能为: 复制操作数栈顶1个或2个值，并插入栈顶以下2个、3个或4个值之后（不弹出栈顶的值）");
+                    dup2X2(currentThread, code);
+                    break;
+                }
+                case ByteCodes.SWAP: {
+                    log.info("执行指令: swap，该指令功能为: 交换操作数栈顶的两个值");
+                    jSwap(currentThread, code);
+                    break;
+                }
+                case ByteCodes.POP: {
+                    log.info("执行指令: pop，该指令功能为: 将栈顶元素出栈");
+                    jPop(currentThread, code);
+                    break;
+                }
+                case ByteCodes.POP2: {
+                    log.info("执行指令: pop2，该指令功能为: 将栈顶一个或两个元素出栈");
+                    jPop2(currentThread, code);
+                    break;
+                }
                 default:
                     throw new Error("暂不支持该指令: " + opcode);
             }
         }
+    }
+
+    /**
+     * 执行pop2字节码指令
+     * 该指令功能为: 将栈顶一个或两个元素出栈
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void jPop2(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value = stack.peek();
+
+        // double、long的处理方式和其他数据类型不同
+        if (value.getType() == BasicType.T_DOUBLE) {    // double类型，在操作数栈中占两个槽位，double需要取两次，value为double类型
+            stack.popDouble();
+        } else if (value.getType() == BasicType.T_LONG) {   // long只需要取一次，value为long类型
+            stack.pop();
+        } else {        // value1 为其他类型，value2 也为其他类型
+            stack.pop();
+
+            StackValue value2 = stack.peek();
+            // 检查操作数类型
+            if (value2.getType() == BasicType.T_DOUBLE || value2.getType() == BasicType.T_LONG) {
+                log.error("dup2字节码指令: value2 不匹配的数据类型" + value2.getType());
+                throw new Error("dup2字节码指令: value2 不匹配的数据类型" + value2.getType());
+            }
+            stack.pop();
+        }
+    }
+
+    /**
+     * 执行pop字节码指令
+     * 该指令功能为: 将栈顶元素出栈
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void jPop(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶两个元素
+        StackValue value = stack.peek();
+        if (value.getType() == BasicType.T_DOUBLE || value.getType() == BasicType.T_LONG) {
+            log.error("swap字节码指令: value 不匹配的数据类型" + value.getType());
+            throw new Error("swap字节码指令: value 不匹配的数据类型" + value.getType());
+        }
+        stack.pop();
+    }
+
+    /**
+     * 执行swap字节码指令
+     * 该指令功能为: 交换操作数栈顶的两个值
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void jSwap(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶两个元素
+        StackValue value1 = stack.peek();
+        if (value1.getType() == BasicType.T_DOUBLE || value1.getType() == BasicType.T_LONG) {
+            log.error("swap字节码指令: value1 不匹配的数据类型" + value1.getType());
+            throw new Error("swap字节码指令: value1 不匹配的数据类型" + value1.getType());
+        }
+        value1 = stack.pop();
+
+        StackValue value2 = stack.peek();
+        // 检查操作数类型
+        if (value2.getType() == BasicType.T_DOUBLE || value2.getType() == BasicType.T_LONG) {
+            log.error("swap字节码指令: value2 不匹配的数据类型" + value2.getType());
+            throw new Error("swap字节码指令: value2 不匹配的数据类型" + value2.getType());
+        }
+        value2 = stack.pop();
+
+        stack.push(value1);
+        stack.push(value2);
+    }
+
+        /**
+         * 执行dup2_x2字节码指令
+         * 该指令功能为: 复制操作数栈顶1个或2个值，并插入栈顶以下2个、3个或4个值之后（不弹出栈顶的值）
+         * @param currentThread 当前线程
+         * @param code 当前方法的指令段
+         * */
+    private static void dup2X2(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value1 = stack.peek();
+
+        // double、long的处理方式和其他数据类型不同
+        if (value1.getType() == BasicType.T_DOUBLE) {    // value1 为 double
+            double _value1 = stack.popDouble();
+
+            StackValue value2 = stack.peek();
+            // 检查操作数类型
+            if (value2.getType() == BasicType.T_DOUBLE) {   // value1 为 double、value2 为 double
+                double _value2 = stack.popDouble();
+
+                stack.pushDouble(_value1);
+                stack.pushDouble(_value2);
+                stack.pushDouble(_value1);
+
+            } else if (value2.getType() == BasicType.T_LONG) {  // value1 为 double、value2 为 long
+                value2 = stack.pop();
+
+                stack.pushDouble(_value1);
+                stack.push(value2);
+                stack.pushDouble(_value1);
+
+            } else {      // value1 为 double、value2 为其他类型，value3 为其他类型
+                value2 = stack.pop();
+
+                StackValue value3 = stack.peek();
+                if (value3.getType() == BasicType.T_DOUBLE || value3.getType() == BasicType.T_LONG) {
+                    log.error("dup2_x1字节码指令: value3 不匹配的数据类型: " + value3.getType());
+                    throw new Error("dup2_x1字节码指令: value3 不匹配的数据类型" + value3.getType());
+                }
+                value3 = stack.pop();
+
+                stack.pushDouble(_value1);
+                stack.push(value3);
+                stack.push(value2);
+                stack.pushDouble(_value1);
+            }
+
+
+        } else if (value1.getType() == BasicType.T_LONG) {   // value1 为 long
+            value1 = stack.pop();
+
+            StackValue value2 = stack.peek();
+            // 检查操作数类型
+            if (value2.getType() == BasicType.T_DOUBLE) {   // value1 为 long、value2 为 double
+                double _value2 = stack.popDouble();
+
+                stack.push(value1);
+                stack.pushDouble(_value2);
+                stack.push(value1);
+
+            } else if (value2.getType() == BasicType.T_LONG) {  // value1 为 long、value2 为 long
+                value2 = stack.pop();
+
+                stack.push(value1);
+                stack.push(value2);
+                stack.push(value1);
+
+            } else {      // value1 为 long、value2 为其他类型，value3 为其他类型
+                value2 = stack.pop();
+
+                StackValue value3 = stack.peek();
+                if (value3.getType() == BasicType.T_DOUBLE || value3.getType() == BasicType.T_LONG) {
+                    log.error("dup2_x1字节码指令: value3 不匹配的数据类型" + value3.getType());
+                    throw new Error("dup2_x1字节码指令: value3 不匹配的数据类型" + value3.getType());
+                }
+                value3 = stack.pop();
+
+                stack.push(value1);
+                stack.push(value3);
+                stack.push(value2);
+                stack.push(value1);
+            }
+        } else {    // value1 为其他类型，value2 为其他类型
+            value1 = stack.pop();
+
+            StackValue value2 = stack.peek();
+            // 检查操作数类型
+            if (value2.getType() == BasicType.T_DOUBLE || value2.getType() == BasicType.T_LONG) {
+                log.error("dup2_x1字节码指令: value2 不匹配的数据类型" + value2.getType());
+                throw new Error("dup2_x1字节码指令: value2 不匹配的数据类型" + value2.getType());
+            }
+            value2 = stack.pop();
+
+            StackValue value3 = stack.peek();
+            if (value3.getType() == BasicType.T_DOUBLE) {   // value1 为其他类型，value2 为其他类型，value3 为 double
+                double _value3 = stack.popDouble();
+
+                stack.push(value2);
+                stack.push(value1);
+                stack.pushDouble(_value3);
+                stack.push(value2);
+                stack.push(value1);
+            } else if (value3.getType() == BasicType.T_LONG) {  // value1 为其他类型，value2 为其他类型，value3 为 long
+                value3 = stack.pop();
+
+                stack.push(value2);
+                stack.push(value1);
+                stack.push(value3);
+                stack.push(value2);
+                stack.push(value1);
+            } else {    // value1 为其他类型，value2 为其他类型，value3 为其他类型
+                value3 = stack.pop();
+
+                StackValue value4 = stack.peek();
+                if (value4.getType() == BasicType.T_DOUBLE || value4.getType() == BasicType.T_LONG) {
+                    log.error("dup2_x1字节码指令: value4 不匹配的数据类型" + value4.getType());
+                    throw new Error("dup2_x1字节码指令: value4 不匹配的数据类型" + value4.getType());
+                }
+                value4 = stack.pop();
+
+                stack.push(value2);
+                stack.push(value1);
+                stack.push(value4);
+                stack.push(value3);
+                stack.push(value2);
+                stack.push(value1);
+            }
+        }
+    }
+
+    /**
+     * 执行dup2_x1字节码指令
+     * 该指令功能为: 复制操作数栈顶1个或2个值，并插入栈顶以下2个或3个值之后（不弹出栈顶的值）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void dup2X1(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value1 = stack.peek();
+
+        // double、long的处理方式和其他数据类型不同
+        if (value1.getType() == BasicType.T_DOUBLE) {    // double类型，在操作数栈中占两个槽位，double需要取两次
+            double _value1 = stack.popDouble();
+
+            StackValue value2 = stack.peek();
+            // 检查操作数类型
+            if (value2.getType() == BasicType.T_DOUBLE || value2.getType() == BasicType.T_LONG) {
+                log.error("dup2_x1字节码指令: value2 不匹配的数据类型" + value2.getType());
+                throw new Error("dup2_x1字节码指令: value2 不匹配的数据类型" + value2.getType());
+            }
+            value2 = stack.pop();
+
+            stack.pushDouble(_value1);
+            stack.push(value2);
+            stack.pushDouble(_value1);
+
+
+        } else if (value1.getType() == BasicType.T_LONG) {   // long只需要取一次
+            value1 = stack.pop();
+
+            StackValue value2 = stack.peek();
+            // 检查操作数类型
+            if (value2.getType() == BasicType.T_DOUBLE || value2.getType() == BasicType.T_LONG) {
+                log.error("dup2_x1字节码指令: value2 不匹配的数据类型" + value2.getType());
+                throw new Error("dup2_x1字节码指令: value2 不匹配的数据类型" + value2.getType());
+            }
+            value2 = stack.pop();
+
+            stack.push(value1);
+            stack.push(value2);
+            stack.push(value1);
+        } else {
+            value1 = stack.pop();
+
+            StackValue value2 = stack.peek();
+            // 检查操作数类型
+            if (value2.getType() == BasicType.T_DOUBLE || value2.getType() == BasicType.T_LONG) {
+                log.error("dup2_x1字节码指令: value2 不匹配的数据类型" + value2.getType());
+                throw new Error("dup2_x1字节码指令: value2 不匹配的数据类型" + value2.getType());
+            }
+            value2 = stack.pop();
+
+            StackValue value3 = stack.peek();
+            // 检查操作数类型
+            if (value3.getType() == BasicType.T_DOUBLE || value3.getType() == BasicType.T_LONG) {
+                log.error("dup2_x1字节码指令: value3 不匹配的数据类型" + value3.getType());
+                throw new Error("dup2_x1字节码指令: value3 不匹配的数据类型" + value3.getType());
+            }
+            value3 = stack.pop();
+
+            stack.push(value2);
+            stack.push(value1);
+            stack.push(value3);
+            stack.push(value2);
+            stack.push(value1);
+        }
+    }
+
+    /**
+     * 执行dup2字节码指令
+     * 该指令功能为: 复制操作数栈顶1个或2个值，并插入到栈顶（不弹出栈顶的值）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void dup2(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value = stack.peek();
+
+        // double、long的处理方式和其他数据类型不同
+        if (value.getType() == BasicType.T_DOUBLE) {    // double类型，在操作数栈中占两个槽位，double需要取两次
+            double _value = stack.popDouble();
+
+            stack.pushDouble(_value);
+            stack.pushDouble(_value);
+        } else if (value.getType() == BasicType.T_LONG) {   // long只需要取一次
+            stack.push(value);
+        } else {
+            StackValue value1 = stack.pop();
+
+            StackValue value2 = stack.peek();
+            // 检查操作数类型
+            if (value2.getType() == BasicType.T_DOUBLE || value2.getType() == BasicType.T_LONG) {
+                log.error("dup2字节码指令: value2 不匹配的数据类型" + value2.getType());
+                throw new Error("dup2字节码指令: value2 不匹配的数据类型" + value2.getType());
+            }
+            value2 = stack.pop();
+
+            stack.push(value2);
+            stack.push(value1);
+            stack.push(value2);
+            stack.push(value1);
+        }
+    }
+
+    /**
+     * 执行dup_x2字节码指令
+     * 该指令功能为: 复制操作数栈顶的值，并插入到栈顶两个或三个元素之后（不弹出栈顶的值）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void dupX2(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value1 = stack.peek();
+        // 检查操作数类型
+        if (value1.getType() == BasicType.T_DOUBLE || value1.getType() == BasicType.T_LONG) {
+            log.error("dup_x2字节码指令: value1 不匹配的数据类型" + value1.getType());
+            throw new Error("dup_x2字节码指令: value1 不匹配的数据类型" + value1.getType());
+        }
+        value1 = stack.pop();
+
+        // value2不能直接弹出，因为value2如果是double类型是占两个槽位的，要弹出两个槽位才行；如果不是double，则只需要弹出一个槽位即可，所以要先看下栈顶元素是什么类型，再去做相应的操作
+        StackValue value2 = stack.peek();
+
+        // double、long的处理方式和其他数据类型不同
+        // value2是double类型，在操作数栈中占两个槽位，double需要取两次
+        if (value2.getType() == BasicType.T_DOUBLE) {
+            // 取出栈顶第二个元素（double类型，两个槽位）
+            double _value2 = stack.popDouble();
+
+            // 将栈顶元素以及上面取出的栈顶两个元素重新压入栈
+            stack.push(value1);
+            stack.pushDouble(_value2);
+            stack.push(value1);
+
+        } else if (value2.getType() == BasicType.T_LONG) {  // long只需要取一次
+            // 取出栈顶第二个元素（long类型）
+            value2 = stack.pop();
+            // 将栈顶元素以及上面取出的栈顶两个元素重新压入栈
+            stack.push(value1);
+            stack.push(value2);
+            stack.push(value1);
+
+        } else {    // value2是其他类型
+            // 取出栈顶第二个元素
+            value2 = stack.pop();
+
+            // 取出栈顶第三个元素
+            StackValue value3 = stack.peek();
+            if (value3.getType() == BasicType.T_DOUBLE || value1.getType() == BasicType.T_LONG) {
+                log.error("dup_x2字节码指令: value3 不匹配的数据类型" + value3.getType());
+                throw new Error("dup_x2字节码指令: value3 不匹配的数据类型" + value3.getType());
+            }
+            value3 = stack.pop();
+
+            // 将栈顶元素以及上面取出的栈顶三个元素重新压入栈
+            stack.push(value1);
+            stack.push(value3);
+            stack.push(value2);
+            stack.push(value1);
+        }
+    }
+
+    /**
+     * 执行dup_x1字节码指令
+     * 该指令功能为: 复制操作数栈顶的值，并插入到栈顶两个元素之后（不弹出栈顶的值）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void dupX1(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶两个元素
+        StackValue value1 = stack.peek();
+        if (value1.getType() == BasicType.T_DOUBLE || value1.getType() == BasicType.T_LONG) {
+            log.error("dup_x1字节码指令: value1 不匹配的数据类型" + value1.getType());
+            throw new Error("dup_x1字节码指令: value1 不匹配的数据类型" + value1.getType());
+        }
+        value1 = stack.pop();
+
+        StackValue value2 = stack.peek();
+        // 检查操作数类型
+        if (value2.getType() == BasicType.T_DOUBLE || value2.getType() == BasicType.T_LONG) {
+            log.error("dup_x1字节码指令: value2 不匹配的数据类型" + value2.getType());
+            throw new Error("dup_x1字节码指令: value2 不匹配的数据类型" + value2.getType());
+        }
+        value2 = stack.pop();
+
+        // 将栈顶元素以及上面取出的栈顶两个元素重新压入栈
+        stack.push(value1);
+        stack.push(value2);
+        stack.push(value1);
+    }
+
+    /**
+     * 执行dup字节码指令
+     * 该指令功能为: 复制操作数栈顶的值，并插入到栈顶（不弹出栈顶的值）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void dup(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value = stack.peek();
+
+        // 检查操作数类型
+        if (value.getType() == BasicType.T_LONG || value.getType() == BasicType.T_DOUBLE) {
+            log.error("dup字节码指令: value 不匹配的数据类型" + value.getType());
+            throw new Error("dup字节码指令: value 不匹配的数据类型" + value.getType());
+        }
+
+        // 压入栈
+        stack.push(value);
+    }
+
+    /**
+     * 执行iinc字节码指令
+     * 该指令功能为: 将局部变量表中指定的int类型变量增加指定值（i++、i--、i+=2）（操作数1: 局部变量表中的索引，操作数2: 增加的常量值）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iInc(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 局部变量表
+        StackValueCollection local = frame.getLocalVariableTable();
+
+        // 第一个操作数: 局部变量表中的索引（无符号byte）
+        int index = code.getU1Code();
+
+        // 第二个操作数: 增加多少（有符号byte）
+        int step = code.getU1Code2();
+
+        // 运算
+        int v = (int) local.get(index).getData();
+        v += step;
+
+        // 写回局部变量表
+        local.set(index, new StackValue(BasicType.T_INT, v));
+    }
+
+    /**
+     * 执行lxor字节码指令
+     * 该指令功能为: 将栈顶两个long类型数值按位异或并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lXor(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_LONG || value2.getType() != BasicType.T_LONG) {
+            log.error("lxor字节码指令: 不匹配的数据类型");
+            throw new Error("lxor字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        long ret = (long) value1.getData() ^ (long) value2.getData();
+
+        log.info("执行指令: lxor，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+    /**
+     * 执行lor字节码指令
+     * 该指令功能为: 将栈顶两个long类型数值按位或并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lOr(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_LONG || value2.getType() != BasicType.T_LONG) {
+            log.error("lor字节码指令: 不匹配的数据类型");
+            throw new Error("lor字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        long ret = (long) value1.getData() | (long) value2.getData();
+
+        log.info("执行指令: lor，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+    /**
+     * 执行land字节码指令
+     * 该指令功能为: 将栈顶两个long类型数值按位与并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lAnd(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_LONG || value2.getType() != BasicType.T_LONG) {
+            log.error("land字节码指令: 不匹配的数据类型");
+            throw new Error("land字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        long ret = (long) value1.getData() & (long) value2.getData();
+
+        log.info("执行指令: land，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+    /**
+     * 执行ixor字节码指令
+     * 该指令功能为: 将栈顶两个int类型数值按位异或并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iXor(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
+            log.error("xor字节码指令: 不匹配的数据类型");
+            throw new Error("xor字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int ret = (int) value1.getData() ^ (int) value2.getData();
+
+        log.info("执行指令: xor，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
+    }
+
+    /**
+     * 执行ior字节码指令
+     * 该指令功能为: 将栈顶两个int类型数值按位或并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iOr(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
+            log.error("ior字节码指令: 不匹配的数据类型");
+            throw new Error("ior字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int ret = (int) value1.getData() | (int) value2.getData();
+
+        log.info("执行指令: ior，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
+    }
+
+    /**
+     * 执行iand字节码指令
+     * 该指令功能为: 将栈顶两个int类型数值按位与并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iAnd(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
+            log.error("iand字节码指令: 不匹配的数据类型");
+            throw new Error("iand字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int ret = (int) value1.getData() & (int) value2.getData();
+
+        log.info("执行指令: iand，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
+    }
+
+    /**
+     * 执行lushr字节码指令
+     * 该指令功能为: 将栈顶long类型数值右移指定位数（无符号）并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lUShr(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_LONG || value2.getType() != BasicType.T_INT) {
+            log.error("lushr字节码指令: 不匹配的数据类型");
+            throw new Error("lushr字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int s = ((int) value2.getData()) & 0x3F;
+        long ret = ((long) value1.getData()) >>> s;
+
+        log.info("执行指令: lushr，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+    /**
+     * 执行iushr字节码指令
+     * 该指令功能为: 将栈顶int类型数值右移指定位数（无符号）并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iUShr(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
+            log.error("iushr字节码指令: 不匹配的数据类型");
+            throw new Error("iushr字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int s = ((int) value2.getData()) & 0x1F;
+        int ret = ((int) value1.getData()) >>> s;
+
+        log.info("执行指令: iushr，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
+    }
+
+    /**
+     * 执行lshr字节码指令
+     * 该指令功能为: 将栈顶long类型数值右移指定位数（有符号）并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lShr(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_LONG || value2.getType() != BasicType.T_INT) {
+            log.error("lshr字节码指令: 不匹配的数据类型");
+            throw new Error("lshr字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int s = ((int) value2.getData()) & 0x3F;
+        long ret = ((long) value1.getData()) >> s;
+
+        log.info("执行指令: lshr，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+
+    /**
+     * 执行ishr字节码指令
+     * 该指令功能为: 将栈顶int类型数值右移指定位数（有符号）并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iShr(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
+            log.error("ishr字节码指令: 不匹配的数据类型");
+            throw new Error("ishr字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int s = ((int) value2.getData()) & 0x1F;
+        int ret = ((int) value1.getData()) >> s;
+
+        log.info("执行指令: ishr，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
+    }
+
+    /**
+     * 执行lshl字节码指令
+     * 该指令功能为: 将栈顶long类型数值左移指定位数并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lShl(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_LONG || value2.getType() != BasicType.T_INT) {
+            log.error("lshl字节码指令: 不匹配的数据类型");
+            throw new Error("lshl字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int s = ((int) value2.getData()) & 0x3F;
+        long ret = ((long) value1.getData()) << s;
+
+        log.info("执行指令: lshl，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+
+    /**
+     * 执行ishl字节码指令
+     * 该指令功能为: 将栈顶int类型数值左移指定位数并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iShl(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
+            log.error("ishl字节码指令: 不匹配的数据类型");
+            throw new Error("ishl字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int s = ((int) value2.getData()) & 0x1F;
+        int ret = ((int) value1.getData()) << s;
+
+        log.info("执行指令: ishl，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
+    }
+
+    /**
+     * 执行dneg字节码指令
+     * 该指令功能为: 将栈顶double类型数值取负并将结果压入栈顶（需要将double类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void dNeg(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        double value = stack.popDouble();
+        // 运算
+        double ret = -(value);
+
+        log.info("执行指令: dneg，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.pushDouble(ret);
+    }
+
+    /**
+     * 执行fneg字节码指令
+     * 该指令功能为: 将栈顶float类型数值取负并将结果压入栈顶（需要将float类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void fNeg(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("fneg字节码指令: 不匹配的数据类型");
+            throw new Error("fneg字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        float ret = -((float) value.getData());
+
+        log.info("执行指令: fneg，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_FLOAT, ret));
+    }
+
+    /**
+     * 执行lneg字节码指令
+     * 该指令功能为: 将栈顶long类型数值取负并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lNeg(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("lneg字节码指令: 不匹配的数据类型");
+            throw new Error("lneg字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        long ret = -((long) value.getData());
+
+        log.info("执行指令: lneg，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+    /**
+     * 执行ineg字节码指令
+     * 该指令功能为: 将栈顶int类型数值取负并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iNeg(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("ineg字节码指令: 不匹配的数据类型");
+            throw new Error("ineg字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int ret = -((int) value.getData());
+
+        log.info("执行指令: ineg，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
+    }
+
+    /**
+     * 执行drem字节码指令
+     * 该指令功能为: 将栈顶两个double类型数值取模并将结果压入栈顶（需要将double类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void dRem(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        double value2 = stack.popDouble();
+        double value1 = stack.popDouble();
+
+        // 运算
+        double ret = value1 % value2;
+
+        log.info("执行指令: drem，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.pushDouble(ret);
+    }
+
+    /**
+     * 执行frem字节码指令
+     * 该指令功能为: 将栈顶两个float类型数值取模并将结果压入栈顶（需要将float类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void fRem(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_FLOAT || value2.getType() != BasicType.T_FLOAT) {
+            log.error("frem字节码指令: 不匹配的数据类型");
+            throw new Error("frem字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        float ret = (float) value1.getData() % (float) value2.getData();
+
+        log.info("执行指令: frem，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_FLOAT, ret));
+    }
+
+    /**
+     * 执行lrem字节码指令
+     * 该指令功能为: 将栈顶两个long类型数值取模并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lRem(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_LONG || value2.getType() != BasicType.T_LONG) {
+            log.error("lrem字节码指令: 不匹配的数据类型");
+            throw new Error("lrem字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        long ret = (long) value1.getData() % (long) value2.getData();
+
+        log.info("执行指令: lrem，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+    /**
+     * 执行irem字节码指令
+     * 该指令功能为: 将栈顶两个int类型数值取模并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iRem(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
+            log.error("irem字节码指令: 不匹配的数据类型");
+            throw new Error("irem字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int ret = (int) value1.getData() % (int) value2.getData();
+
+        log.info("执行指令: irem，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
+    }
+
+    /**
+     * 执行ddiv字节码指令
+     * 该指令功能为: 将栈顶两个double类型数值相除并将结果压入栈顶（需要将double类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void dDiv(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        double value2 = stack.popDouble();
+        double value1 = stack.popDouble();
+
+        // 运算
+        double ret = value1 / value2;
+
+        log.info("执行指令: ddiv，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.pushDouble(ret);
+    }
+
+    /**
+     * 执行fdiv字节码指令
+     * 该指令功能为: 将栈顶两个float类型数值相除并将结果压入栈顶（需要将float类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void fDiv(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_FLOAT || value2.getType() != BasicType.T_FLOAT) {
+            log.error("fdiv字节码指令: 不匹配的数据类型");
+            throw new Error("fdiv字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        float ret = (float) value1.getData() / (float) value2.getData();
+
+        log.info("执行指令: fdiv，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_FLOAT, ret));
+    }
+
+    /**
+     * 执行ldiv字节码指令
+     * 该指令功能为: 将栈顶两个long类型数值相除并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lDiv(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_LONG || value2.getType() != BasicType.T_LONG) {
+            log.error("ldiv字节码指令: 不匹配的数据类型");
+            throw new Error("ldiv字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        long ret = (long) value1.getData() / (long) value2.getData();
+
+        log.info("执行指令: ldiv，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+    /**
+     * 执行idiv字节码指令
+     * 该指令功能为: 将栈顶两个int类型数值相除并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iDiv(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
+            log.error("idiv字节码指令: 不匹配的数据类型");
+            throw new Error("idiv字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int ret = (int) value1.getData() / (int) value2.getData();
+
+        log.info("执行指令: idiv，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
+    }
+
+    /**
+     * 执行dmul字节码指令
+     * 该指令功能为: 将栈顶两个double类型数值相乘并将结果压入栈顶（需要将double类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void dMul(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        double value2 = stack.popDouble();
+        double value1 = stack.popDouble();
+
+        // 运算
+        double ret = value1 * value2;
+
+        log.info("执行指令: dmul，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.pushDouble(ret);
+    }
+
+    /**
+     * 执行fmul字节码指令
+     * 该指令功能为: 将栈顶两个float类型数值相乘并将结果压入栈顶（需要将float类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void fMul(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_FLOAT || value2.getType() != BasicType.T_FLOAT) {
+            log.error("fmul字节码指令: 不匹配的数据类型");
+            throw new Error("fmul字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        float ret = (float) value1.getData() * (float) value2.getData();
+
+        log.info("执行指令: fmul，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_FLOAT, ret));
+    }
+
+    /**
+     * 执行lmul字节码指令
+     * 该指令功能为: 将栈顶两个long类型数值相乘并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lMul(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_LONG || value2.getType() != BasicType.T_LONG) {
+            log.error("lmul字节码指令: 不匹配的数据类型");
+            throw new Error("lmul字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        long ret = (long) value1.getData() * (long) value2.getData();
+
+        log.info("执行指令: lmul，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+    /**
+     * 执行imul字节码指令
+     * 该指令功能为: 将栈顶两个int类型数值相乘并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iMul(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
+            log.error("imul字节码指令: 不匹配的数据类型");
+            throw new Error("imul字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int ret = (int) value1.getData() * (int) value2.getData();
+
+        log.info("执行指令: imul，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
+    }
+
+    /**
+     * 执行dsub字节码指令
+     * 该指令功能为: 将栈顶两个double类型数值相减并将结果压入栈顶（需要将double类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void dSub(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        double value2 = stack.popDouble();
+        double value1 = stack.popDouble();
+
+        // 运算
+        double ret = value1 - value2;
+
+        log.info("执行指令: dsub，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.pushDouble(ret);
+    }
+
+    /**
+     * 执行fsub字节码指令
+     * 该指令功能为: 将栈顶两个float类型数值相减并将结果压入栈顶（需要将float类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void fSub(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_FLOAT || value2.getType() != BasicType.T_FLOAT) {
+            log.error("fsub字节码指令: 不匹配的数据类型");
+            throw new Error("fsub字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        float ret = (float) value1.getData() - (float) value2.getData();
+
+        log.info("执行指令: fsub，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_FLOAT, ret));
+    }
+
+    /**
+     * 执行lsub字节码指令
+     * 该指令功能为: 将栈顶两个long类型数值相减并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lSub(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_LONG || value2.getType() != BasicType.T_LONG) {
+            log.error("lsub字节码指令: 不匹配的数据类型");
+            throw new Error("lsub字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        long ret = (long) value1.getData() - (long) value2.getData();
+
+        log.info("执行指令: lsub，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+    /**
+     * 执行isub字节码指令
+     * 该指令功能为: 将栈顶两个int类型数值相减并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iSub(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
+            log.error("isub字节码指令: 不匹配的数据类型");
+            throw new Error("isub字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int ret = (int) value1.getData() - (int) value2.getData();
+
+        log.info("执行指令: isub，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
+    }
+
+    /**
+     * 执行dadd字节码指令
+     * 该指令功能为: 将栈顶两个double类型数值相加并将结果压入栈顶（需要将double类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void dAdd(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        double value2 = stack.popDouble();
+        double value1 = stack.popDouble();
+
+        // 运算
+        double ret = value1 + value2;
+
+        log.info("执行指令: dadd，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.pushDouble(ret);
+    }
+
+    /**
+     * 执行fadd字节码指令
+     * 该指令功能为: 将栈顶两个float类型数值相加并将结果压入栈顶（需要将float类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void fAdd(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_FLOAT || value2.getType() != BasicType.T_FLOAT) {
+            log.error("fadd字节码指令: 不匹配的数据类型");
+            throw new Error("fadd字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        float ret = (float) value1.getData() + (float) value2.getData();
+
+        log.info("执行指令: fadd，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_FLOAT, ret));
+    }
+
+    /**
+     * 执行ladd字节码指令
+     * 该指令功能为: 将栈顶两个long类型数值相加并将结果压入栈顶（需要将long类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void lAdd(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_LONG || value2.getType() != BasicType.T_LONG) {
+            log.error("ladd字节码指令: 不匹配的数据类型");
+            throw new Error("ladd字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        long ret = (long) value1.getData() + (long) value2.getData();
+
+        log.info("执行指令: ladd，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_LONG, ret));
+    }
+
+    /**
+     * 执行iadd字节码指令
+     * 该指令功能为: 将栈顶两个int类型数值相加并将结果压入栈顶（需要将int类型先从栈中弹出）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void iAdd(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+
+        // 取出栈顶元素
+        StackValue value2 = stack.pop();
+        StackValue value1 = stack.pop();
+
+        // 检查操作数类型
+        if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
+            log.error("iadd字节码指令: 不匹配的数据类型");
+            throw new Error("iadd字节码指令: 不匹配的数据类型");
+        }
+
+        // 运算
+        int ret = (int) value1.getData() + (int) value2.getData();
+
+        log.info("执行指令: iadd，运行结果: " + ret);
+
+        // 将结果压入栈中
+        stack.push(new StackValue(BasicType.T_INT, ret));
     }
 
     /**
@@ -441,10 +2242,19 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        short value = (short) ((int) stack.pop().getData());
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("i2s字节码指令: 不匹配的数据类型");
+            throw new Error("i2s字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        short ret = (short) ((int) value.getData());
         // 将结果压入栈中
         // 在JVM中，小于4字节的数据类型都是以4字节进行存储的，即小于4字节的数据类型都是以int类型存储的
-        stack.push(new StackValue(BasicType.T_INT, value));
+        stack.push(new StackValue(BasicType.T_INT, ret));
     }
 
     /**
@@ -460,10 +2270,19 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        char value = (char) ((int) stack.pop().getData());
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("i2c字节码指令: 不匹配的数据类型");
+            throw new Error("i2c字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        char ret = (char) ((int) value.getData());
         // 将结果压入栈中
         // 在JVM中，小于4字节的数据类型都是以4字节进行存储的，即小于4字节的数据类型都是以int类型存储的
-        stack.push(new StackValue(BasicType.T_INT, value));
+        stack.push(new StackValue(BasicType.T_INT, ret));
     }
 
     /**
@@ -479,10 +2298,19 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        byte value = (byte) ((int) stack.pop().getData());
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("i2b字节码指令: 不匹配的数据类型");
+            throw new Error("i2b字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        byte ret = (byte) ((int) value.getData());
         // 将结果压入栈中
         // 在JVM中，小于4字节的数据类型都是以4字节进行存储的，即小于4字节的数据类型都是以int类型存储的
-        stack.push(new StackValue(BasicType.T_INT, value));
+        stack.push(new StackValue(BasicType.T_INT, ret));
     }
 
     /**
@@ -497,7 +2325,7 @@ public class BytecodeInterpreter {
         // 操作数栈
         StackValueCollection stack = frame.getOperandStack();
 
-        // 取出栈顶元素
+        // 取出栈顶元素，强转
         float value =  (float) stack.popDouble();
         // 将结果压入栈中
         stack.push(new StackValue(BasicType.T_FLOAT, value));
@@ -515,7 +2343,7 @@ public class BytecodeInterpreter {
         // 操作数栈
         StackValueCollection stack = frame.getOperandStack();
 
-        // 取出栈顶元素
+        // 取出栈顶元素，强转
         long value =  (long) stack.popDouble();
         // 将结果压入栈中
         stack.push(new StackValue(BasicType.T_LONG, value));
@@ -533,7 +2361,7 @@ public class BytecodeInterpreter {
         // 操作数栈
         StackValueCollection stack = frame.getOperandStack();
 
-        // 取出栈顶元素
+        // 取出栈顶元素，强转
         int value =  (int) stack.popDouble();
         // 将结果压入栈中
         stack.push(new StackValue(BasicType.T_INT, value));
@@ -552,9 +2380,18 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        double value =  (float) stack.pop().getData();
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("f2d字节码指令: 不匹配的数据类型");
+            throw new Error("f2d字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        double ret =  (float) value.getData();
         // 将结果压入栈中
-        stack.pushDouble(value);
+        stack.pushDouble(ret);
     }
 
     /**
@@ -570,9 +2407,18 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        long value = (long) ((float) stack.pop().getData());
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("f2l字节码指令: 不匹配的数据类型");
+            throw new Error("f2l字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        long ret = (long) ((float) value.getData());
         // 将结果压入栈中
-        stack.push(new StackValue(BasicType.T_LONG, value));
+        stack.push(new StackValue(BasicType.T_LONG, ret));
     }
 
     /**
@@ -588,9 +2434,18 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        int value = (int) ((float) stack.pop().getData());
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("f2i字节码指令: 不匹配的数据类型");
+            throw new Error("f2i字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        int ret = (int) ((float) value.getData());
         // 将结果压入栈中
-        stack.push(new StackValue(BasicType.T_INT, value));
+        stack.push(new StackValue(BasicType.T_INT, ret));
     }
 
     /**
@@ -606,9 +2461,18 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        double value = (double) ((long) stack.pop().getData());
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("l2d字节码指令: 不匹配的数据类型");
+            throw new Error("l2d字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        double ret = (double) ((long) value.getData());
         // 将结果压入栈中
-        stack.pushDouble(value);
+        stack.pushDouble(ret);
     }
 
     /**
@@ -624,9 +2488,18 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        float value = (float) ((long) stack.pop().getData());
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("l2f字节码指令: 不匹配的数据类型");
+            throw new Error("l2f字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        float ret = (float) ((long) value.getData());
         // 将结果压入栈中
-        stack.push(new StackValue(BasicType.T_FLOAT, value));
+        stack.push(new StackValue(BasicType.T_FLOAT, ret));
     }
 
     /**
@@ -642,9 +2515,18 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        int value = (int) ((long) stack.pop().getData());
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("l2i字节码指令: 不匹配的数据类型");
+            throw new Error("l2i字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        int ret = (int) ((long) value.getData());
         // 将结果压入栈中
-        stack.push(new StackValue(BasicType.T_INT, value));
+        stack.push(new StackValue(BasicType.T_INT, ret));
     }
 
     /**
@@ -660,9 +2542,18 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        double value = (int) stack.pop().getData();
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("i2d字节码指令: 不匹配的数据类型");
+            throw new Error("i2d字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        double ret = (int) value.getData();
         // 将结果压入栈中
-        stack.pushDouble(value);
+        stack.pushDouble(ret);
     }
 
     /**
@@ -678,9 +2569,18 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        float value = (int) stack.pop().getData();
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("i2f字节码指令: 不匹配的数据类型");
+            throw new Error("i2f字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        float ret = (int) value.getData();
         // 将结果压入栈中
-        stack.push(new StackValue(BasicType.T_FLOAT, value));
+        stack.push(new StackValue(BasicType.T_FLOAT, ret));
     }
 
     /**
@@ -696,9 +2596,18 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 取出栈顶元素
-        long value = (int) stack.pop().getData();
+        StackValue value = stack.pop();
+
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("i2l字节码指令: 不匹配的数据类型");
+            throw new Error("i2l字节码指令: 不匹配的数据类型");
+        }
+
+        // 强转
+        long ret = (int) value.getData();
         // 将结果压入栈中
-        stack.push(new StackValue(BasicType.T_LONG, value));
+        stack.push(new StackValue(BasicType.T_LONG, ret));
     }
 
     /**
@@ -717,6 +2626,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue[] values = stack.popDouble2();
+        // 检查操作数类型
+        if (values[0].getType() != BasicType.T_DOUBLE || values[1].getType() != BasicType.T_DOUBLE) {
+            log.error("dstore_3字节码指令: 不匹配的数据类型");
+            throw new Error("dstore_3字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为3、4的位置
         local.set(3, values[0]);
         local.set(4, values[1]);
@@ -738,6 +2652,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue[] values = stack.popDouble2();
+        // 检查操作数类型
+        if (values[0].getType() != BasicType.T_DOUBLE || values[1].getType() != BasicType.T_DOUBLE) {
+            log.error("dstore_2字节码指令: 不匹配的数据类型");
+            throw new Error("dstore_2字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为2、3的位置
         local.set(2, values[0]);
         local.set(3, values[1]);
@@ -759,6 +2678,13 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue[] values = stack.popDouble2();
+
+        // 检查操作数类型
+        if (values[0].getType() != BasicType.T_DOUBLE || values[1].getType() != BasicType.T_DOUBLE) {
+            log.error("dstore_1字节码指令: 不匹配的数据类型");
+            throw new Error("dstore_1字节码指令: 不匹配的数据类型");
+        }
+
         // 存入局部变量表索引为1、2的位置
         local.set(1, values[0]);
         local.set(2, values[1]);
@@ -780,6 +2706,13 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue[] values = stack.popDouble2();
+
+        // 检查操作数类型
+        if (values[0].getType() != BasicType.T_DOUBLE || values[1].getType() != BasicType.T_DOUBLE) {
+            log.error("dstore_0字节码指令: 不匹配的数据类型");
+            throw new Error("dstore_0字节码指令: 不匹配的数据类型");
+        }
+
         // 存入局部变量表索引为0、1的位置
         local.set(0, values[0]);
         local.set(1, values[1]);
@@ -803,6 +2736,13 @@ public class BytecodeInterpreter {
 
         // 从操作数栈中弹出栈顶元素
         StackValue[] values = stack.popDouble2();
+
+        // 检查操作数类型
+        if (values[0].getType() != BasicType.T_DOUBLE || values[1].getType() != BasicType.T_DOUBLE) {
+            log.error("dstore字节码指令: 不匹配的数据类型");
+            throw new Error("dstore字节码指令: 不匹配的数据类型");
+        }
+
         // 存入局部变量表对应索引的位置
         local.set(index, values[0]);
         local.set(++index, values[1]);
@@ -825,6 +2765,12 @@ public class BytecodeInterpreter {
         // 从局部变量表中索引为3、4所组合成的值（double占两个槽位）
         StackValue valueLow = local.get(3);
         StackValue valueHigh = local.get(4);
+
+        // 检查操作数类型
+        if (valueLow.getType() != BasicType.T_DOUBLE || valueHigh.getType() != BasicType.T_DOUBLE) {
+            log.error("dload_3字节码指令: 不匹配的数据类型");
+            throw new Error("dload_3字节码指令: 不匹配的数据类型");
+        }
 
         // 压入操作数栈中
         stack.push(valueHigh);
@@ -849,6 +2795,12 @@ public class BytecodeInterpreter {
         StackValue valueLow = local.get(2);
         StackValue valueHigh = local.get(3);
 
+        // 检查操作数类型
+        if (valueLow.getType() != BasicType.T_DOUBLE || valueHigh.getType() != BasicType.T_DOUBLE) {
+            log.error("dload_2字节码指令: 不匹配的数据类型");
+            throw new Error("dload_2字节码指令: 不匹配的数据类型");
+        }
+
         // 压入操作数栈中
         stack.push(valueHigh);
         stack.push(valueLow);
@@ -872,6 +2824,12 @@ public class BytecodeInterpreter {
         StackValue valueLow = local.get(1);
         StackValue valueHigh = local.get(2);
 
+        // 检查操作数类型
+        if (valueLow.getType() != BasicType.T_DOUBLE || valueHigh.getType() != BasicType.T_DOUBLE) {
+            log.error("dload_1字节码指令: 不匹配的数据类型");
+            throw new Error("dload_1字节码指令: 不匹配的数据类型");
+        }
+
         // 压入操作数栈中
         stack.push(valueHigh);
         stack.push(valueLow);
@@ -894,6 +2852,12 @@ public class BytecodeInterpreter {
         // 从局部变量表中索引为0、1所组合成的值（double占两个槽位）
         StackValue valueLow = local.get(0);
         StackValue valueHigh = local.get(1);
+
+        // 检查操作数类型
+        if (valueLow.getType() != BasicType.T_DOUBLE || valueHigh.getType() != BasicType.T_DOUBLE) {
+            log.error("dload_0字节码指令: 不匹配的数据类型");
+            throw new Error("dload_0字节码指令: 不匹配的数据类型");
+        }
 
         // 压入操作数栈中
         stack.push(valueHigh);
@@ -919,6 +2883,12 @@ public class BytecodeInterpreter {
         // 从局部变量表中取出对应索引位置的值
         StackValue valueLow = local.get(index);
         StackValue valueHigh = local.get(++index);
+
+        // 检查操作数类型
+        if (valueLow.getType() != BasicType.T_DOUBLE || valueHigh.getType() != BasicType.T_DOUBLE) {
+            log.error("dload字节码指令: 不匹配的数据类型");
+            throw new Error("dload字节码指令: 不匹配的数据类型");
+        }
 
         // 压入操作数栈中
         stack.push(valueHigh);
@@ -970,7 +2940,7 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 将0（long）压入操作数栈中
-        stack.push(new StackValue(BasicType.T_LONG, 0));
+        stack.push(new StackValue(BasicType.T_LONG, (long) 0));
     }
 
     /**
@@ -986,7 +2956,7 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
 
         // 将1（long）压入操作数栈中
-        stack.push(new StackValue(BasicType.T_LONG, 1));
+        stack.push(new StackValue(BasicType.T_LONG, (long) 1));
     }
 
     /**
@@ -1005,6 +2975,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中获取索引为3的值
         StackValue value = local.get(3);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("lload_3字节码指令: 不匹配的数据类型");
+            throw new Error("lload_3字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1025,6 +3000,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中索引为2的值
         StackValue value = local.get(2);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("lload_2字节码指令: 不匹配的数据类型");
+            throw new Error("lload_2字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1045,6 +3025,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中索引为1的值
         StackValue value = local.get(1);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("lload_1字节码指令: 不匹配的数据类型");
+            throw new Error("lload_1字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1065,6 +3050,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中索引为0的值
         StackValue value = local.get(0);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("lload_0字节码指令: 不匹配的数据类型");
+            throw new Error("lload_0字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1087,6 +3077,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中取出对应索引位置的值
         StackValue value = local.get(index);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("lload字节码指令: 不匹配的数据类型");
+            throw new Error("lload字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1107,6 +3102,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("lstore_3字节码指令: 不匹配的数据类型");
+            throw new Error("lstore_3字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为3的位置
         local.set(3, value);
     }
@@ -1127,6 +3127,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("lstore_2字节码指令: 不匹配的数据类型");
+            throw new Error("lstore_2字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为2的位置
         local.set(2, value);
     }
@@ -1147,6 +3152,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("lstore_1字节码指令: 不匹配的数据类型");
+            throw new Error("lstore_1字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为1的位置
         local.set(1, value);
     }
@@ -1167,6 +3177,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("lstore_0字节码指令: 不匹配的数据类型");
+            throw new Error("lstore_0字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为0的位置
         local.set(0, value);
     }
@@ -1189,6 +3204,11 @@ public class BytecodeInterpreter {
 
         // 从操作数栈中弹出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_LONG) {
+            log.error("lstore字节码指令: 不匹配的数据类型");
+            throw new Error("lstore字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表对应索引的位置
         local.set(index, value);
     }
@@ -1304,6 +3324,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("fstore_0字节码指令: 不匹配的数据类型");
+            throw new Error("fstore_0字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为0的位置
         local.set(0, value);
     }
@@ -1324,6 +3349,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("fstore_1字节码指令: 不匹配的数据类型");
+            throw new Error("fstore_1字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为1的位置
         local.set(1, value);
     }
@@ -1344,6 +3374,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("fstore_2字节码指令: 不匹配的数据类型");
+            throw new Error("fstore_2字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为2的位置
         local.set(2, value);
     }
@@ -1364,6 +3399,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("fstore_3字节码指令: 不匹配的数据类型");
+            throw new Error("fstore_3字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为3的位置
         local.set(3, value);
     }
@@ -1386,6 +3426,11 @@ public class BytecodeInterpreter {
 
         // 从操作数栈中弹出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("fstore字节码指令: 不匹配的数据类型");
+            throw new Error("fstore字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表对应索引的位置
         local.set(index, value);
     }
@@ -1406,6 +3451,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中索引为0的值
         StackValue value = local.get(0);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("fload_0字节码指令: 不匹配的数据类型");
+            throw new Error("fload_0字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1426,6 +3476,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中索引为0的值
         StackValue value = local.get(1);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("fload_1字节码指令: 不匹配的数据类型");
+            throw new Error("fload_1字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1446,6 +3501,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中索引为0的值
         StackValue value = local.get(2);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("fload_2字节码指令: 不匹配的数据类型");
+            throw new Error("fload_2字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1466,6 +3526,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中索引为0的值
         StackValue value = local.get(3);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("fload_3字节码指令: 不匹配的数据类型");
+            throw new Error("fload_3字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1488,6 +3553,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中取出对应索引位置的值
         StackValue value = local.get(index);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_FLOAT) {
+            log.error("fload字节码指令: 不匹配的数据类型");
+            throw new Error("fload字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1670,6 +3740,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中取出对应索引位置的值
         StackValue value = local.get(index);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("iload字节码指令: 不匹配的数据类型");
+            throw new Error("iload字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1690,6 +3765,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中索引为0的值
         StackValue value = local.get(0);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("iload_0字节码指令: 不匹配的数据类型");
+            throw new Error("iload_0字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1710,6 +3790,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中索引为1的值
         StackValue value = local.get(1);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("iload_1字节码指令: 不匹配的数据类型");
+            throw new Error("iload_1字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1730,6 +3815,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中索引为2的值
         StackValue value = local.get(2);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("iload_2字节码指令: 不匹配的数据类型");
+            throw new Error("iload_2字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1750,6 +3840,11 @@ public class BytecodeInterpreter {
 
         // 从局部变量表中索引为3的值
         StackValue value = local.get(3);
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("iload_3字节码指令: 不匹配的数据类型");
+            throw new Error("iload_3字节码指令: 不匹配的数据类型");
+        }
         // 压入操作数栈中
         stack.push(value);
     }
@@ -1772,6 +3867,11 @@ public class BytecodeInterpreter {
 
         // 从操作数栈中弹出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("istore字节码指令: 不匹配的数据类型");
+            throw new Error("istore字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表对应索引的位置
         local.set(index, value);
     }
@@ -1792,6 +3892,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("istore_0字节码指令: 不匹配的数据类型");
+            throw new Error("istore_0字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为0的位置
         local.set(0, value);
     }
@@ -1812,6 +3917,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("istore_1字节码指令: 不匹配的数据类型");
+            throw new Error("istore_1字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为1的位置
         local.set(1, value);
     }
@@ -1832,6 +3942,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("istore_2字节码指令: 不匹配的数据类型");
+            throw new Error("istore_2字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为2的位置
         local.set(2, value);
     }
@@ -1852,6 +3967,11 @@ public class BytecodeInterpreter {
 
         // 取出栈顶元素
         StackValue value = stack.pop();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_INT) {
+            log.error("istore_3字节码指令: 不匹配的数据类型");
+            throw new Error("istore_3字节码指令: 不匹配的数据类型");
+        }
         // 存入局部变量表索引为3的位置
         local.set(3, value);
     }
