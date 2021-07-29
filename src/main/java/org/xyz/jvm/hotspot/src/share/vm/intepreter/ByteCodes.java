@@ -193,6 +193,18 @@ public class ByteCodes {
     public static final int I2C = 146;      // 0x92
     public static final int I2S = 147;      // 0x93
 
+    public static final int LCMP = 148;     // 0x94
+    public static final int FCMPL = 149;    // 0x95
+    public static final int FCMPG = 150;    // 0x96
+    public static final int DCMPL = 151;    // 0x97
+    public static final int DCMPG = 152;    // 0x98
+
+    public static final int IFEQ = 153;    // 0x99
+    public static final int IFNE = 154;    // 0x9a
+    public static final int IFLT = 155;    // 0x9b
+    public static final int IFGE = 156;    // 0x9c
+    public static final int IFGT = 157;    // 0x9d
+    public static final int IFLE = 158;    // 0x9e
 
     public static final int IF_ICMPEQ = 159;    // 0x9f
     public static final int IF_ICMPNE = 160;    // 0xa0
@@ -206,7 +218,9 @@ public class ByteCodes {
     public static final int GOTO = 167;    // 0xa7
 
     public static final int IRETURN = 172;      // 0xac
-
+    public static final int LRETURN = 173;      // 0xad
+    public static final int FRETURN = 174;      // 0xae
+    public static final int DRETURN = 175;      // 0xaf
     public static final int ARETURN = 176;      // 0xb0
     public static final int RETURN = 177;       // 0xb1
 
@@ -228,4 +242,7 @@ public class ByteCodes {
 
     public static final int ATHROW = 191;       // 0xbf
     public static final int CHECKCAST = 192;    // 0xc0
+
+    public static final int IFNULL = 198;    // 0xc6
+    public static final int IFNONNULL = 199;    // 0xc7
 }

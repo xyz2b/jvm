@@ -10,6 +10,7 @@ public class Attribute {
     public static final String JVM_ATTRIBUTE_LineNumberTable = "LineNumberTable";
     public static final String JVM_ATTRIBUTE_LocalVariableTable = "LocalVariableTable";
     public static final String JVM_ATTRIBUTE_SourceFile = "SourceFile";
+    public static final String JVM_ATTRIBUTE_StackMapTable = "StackMapTable";
 
 
     // 属性名称在常量池中的索引(CONSTANT_Utf8_info，属性名称的字符串)     u2

@@ -35,6 +35,16 @@ public class StackValueCollection {
         return getOperandStack().peek();
     }
 
+    // 入栈int类型元素
+    public void pushInt(int value, JavaVFrame frame) {
+        frame.getOperandStack().push(new StackValue(BasicType.T_INT, value));
+    }
+
+    // 入栈null对象
+    public void pushNull(JavaVFrame frame) {
+        frame.getOperandStack().push(new StackValue(BasicType.T_OBJECT, null));
+    }
+
     /**
      * 将double类型的值压入操作数栈中
      * double是8字节，所以使用两个4字节槽位来存储（int类型）

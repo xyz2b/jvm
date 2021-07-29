@@ -288,10 +288,40 @@ public class ClassFileParser {
                     index = parseSourceFile(content, index, attributeNameIndex, attributeLength, attributeName, attributes);
                     break;
                 }
+                case JVM_ATTRIBUTE_StackMapTable: {
+                    index = parseStackMapTable(content, index, attributeNameIndex, attributeLength, attributeName, attributes);
+                    break;
+                }
                 default:
-                    throw new Error("无法识别的属性项");
+                    throw new Error("无法识别的属性项: " + attributeName);
             }
         }
+
+        return index;
+    }
+
+    /**
+     * 解析 StackMapTable 属性
+     * @param content 字节流
+     * @param index 当前解析索引
+     * @param attributeNameIndex    属性名在常量池中的索引
+     * @param attributeLength       属性长度(Byte)
+     * @param attributeName     属性名
+     * @param attributes        解析出来属性的存储容器
+     * @return 解析完成之后的当前解析索引
+     * */
+    private static int parseStackMapTable(byte[] content, int index, int attributeNameIndex, int attributeLength, String attributeName, Map<String, Attribute> attributes) {
+        StackMapTableAttribute stackMapTableAttribute = new StackMapTableAttribute();
+        stackMapTableAttribute.setAttributeNameIndex(attributeNameIndex);
+        stackMapTableAttribute.setAttributeLength(attributeLength);
+
+        // 直接跳过后面的数据，不做解析
+        index += stackMapTableAttribute.getAttributeLength();
+
+        log.info("\t\t\t stackMapTable: "
+                + ", name index: " + stackMapTableAttribute.getAttributeNameIndex()
+                + ", attr len: " + stackMapTableAttribute.getAttributeLength()
+        );
 
         return index;
     }

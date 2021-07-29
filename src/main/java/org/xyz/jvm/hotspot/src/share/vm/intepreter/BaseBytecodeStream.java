@@ -17,7 +17,7 @@ public class BaseBytecodeStream extends StackObj {
 
     // 该方法的字节码长度(Byte，存储字节码流的字节数组的大小)
     protected int length;
-    // 字节码流的当前读取索引
+    // 字节码流的当前读取索引，即程序计数器（标识当前执行引擎所执行的字节码指令的索引）
     protected int index;
     // 存储字节码流的字节数组
     protected byte[] codes;
