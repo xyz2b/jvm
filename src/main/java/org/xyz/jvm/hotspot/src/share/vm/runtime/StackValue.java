@@ -2,6 +2,7 @@ package org.xyz.jvm.hotspot.src.share.vm.runtime;
 
 import lombok.Data;
 import org.xyz.jvm.hotspot.src.share.tools.DataTranslate;
+import org.xyz.jvm.hotspot.src.share.vm.oops.ArrayOop;
 import org.xyz.jvm.hotspot.src.share.vm.utilities.BasicType;
 
 /**
@@ -20,7 +21,7 @@ public class StackValue {
     private byte[] data;
     // 存储boolean、byte、char、short、int类型数据（4字节以及4字节以下的数据类型）
     private int value;
-    // 存储引用类型数据（数据类型的数据？）
+    // 存储引用类型数据（包括数组类型的数据）
     private Object object;
 
     /**
@@ -77,8 +78,7 @@ public class StackValue {
             case BasicType.T_OBJECT:
                 return object;
             case BasicType.T_ARRAY:
-                // TODO: 支持从操作数栈中弹出数组类型的数据
-                return null;
+                return (ArrayOop) object;
         }
         return null;
     }

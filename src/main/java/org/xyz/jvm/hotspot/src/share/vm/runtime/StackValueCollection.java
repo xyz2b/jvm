@@ -3,6 +3,7 @@ package org.xyz.jvm.hotspot.src.share.vm.runtime;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.xyz.jvm.hotspot.src.share.tools.DataTranslate;
+import org.xyz.jvm.hotspot.src.share.vm.oops.ArrayOop;
 import org.xyz.jvm.hotspot.src.share.vm.utilities.BasicType;
 
 import java.util.ArrayList;
@@ -43,6 +44,22 @@ public class StackValueCollection {
     // 入栈null对象
     public void pushNull(JavaVFrame frame) {
         frame.getOperandStack().push(new StackValue(BasicType.T_OBJECT, null));
+    }
+
+    // 入栈数组类型元素
+    public void pushArray(ArrayOop array, JavaVFrame frame) {
+        frame.getOperandStack().push(new StackValue(BasicType.T_ARRAY, array));
+    }
+
+    // 弹出数组类型元素
+    public ArrayOop popArray(JavaVFrame frame) {
+        StackValue value = frame.getOperandStack().peek();
+        if (BasicType.T_ARRAY != value.getType()) {
+            throw new Error("popArray 类型检查不通过: " + value.getType());
+        }
+        value = frame.getOperandStack().pop();
+
+        return (ArrayOop) value.getData();
     }
 
     /**
