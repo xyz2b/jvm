@@ -6,6 +6,9 @@ public class Invoke {
         int i = 10;
         System.out.println(Other.toHexString(i));
 //        invokeStatic();
+
+        String s = new String("xyzjiao");
+        System.out.println(s);
     }
 
     public static void invokeStatic() {
