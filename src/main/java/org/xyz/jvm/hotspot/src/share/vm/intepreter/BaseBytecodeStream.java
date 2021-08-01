@@ -70,7 +70,7 @@ public class BaseBytecodeStream extends StackObj {
     }
 
     /**
-     * 重置字节流的读取索引
+     * 重置字节流的读取索引，重置程序计数器，重复调用同一个方法时，需要重置程序计数器
      * */
     public void reset() {
         index = 0;

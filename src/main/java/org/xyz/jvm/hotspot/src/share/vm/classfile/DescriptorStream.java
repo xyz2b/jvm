@@ -2,8 +2,10 @@ package org.xyz.jvm.hotspot.src.share.vm.classfile;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.xyz.jvm.example.array.Array;
 import org.xyz.jvm.hotspot.src.share.tools.DataTranslate;
 import org.xyz.jvm.hotspot.src.share.vm.memory.ResourceObj;
+import org.xyz.jvm.hotspot.src.share.vm.oops.ArrayOop;
 import org.xyz.jvm.hotspot.src.share.vm.oops.DescriptorInfo;
 import org.xyz.jvm.hotspot.src.share.vm.runtime.JavaVFrame;
 import org.xyz.jvm.hotspot.src.share.vm.runtime.StackValue;
@@ -34,41 +36,32 @@ public class DescriptorStream extends ResourceObj {
     // 解析完的返回参数类型
     private DescriptorInfo returnElement;
 
+    // 解析完的字段类型
+    private DescriptorInfo field;
+
     public DescriptorStream(String descriptorInfo) {
         this.descriptorInfo = descriptorInfo;
     }
 
     /**
-     * 将不同类型的值压入操作数栈中
+     * 将不同类型的字段值压入操作数栈中
      * */
     public void pushField(Object o, JavaVFrame frame) {
-        switch (returnElement.getType()) {
+        switch (field.getType()) {
             case BasicType.T_BOOLEAN:
-                frame.getOperandStack().push(new StackValue(BasicType.T_BOOLEAN, (boolean)o));
-
-                break;
-            case BasicType.T_BYTE:
-                frame.getOperandStack().push(new StackValue(BasicType.T_BYTE, (byte)o));
-
-                break;
-            case BasicType.T_CHAR:
-                frame.getOperandStack().push(new StackValue(BasicType.T_CHAR, (char)o));
-
-                break;
             case BasicType.T_SHORT:
-                frame.getOperandStack().push(new StackValue(BasicType.T_SHORT, (short)o));
-
-                break;
+            case BasicType.T_CHAR:
+            case BasicType.T_BYTE:
             case BasicType.T_INT:
                 frame.getOperandStack().push(new StackValue(BasicType.T_INT, (int)o));
 
                 break;
             case BasicType.T_LONG:
-                frame.getOperandStack().push(new StackValue(BasicType.T_LONG, (int)o));
+                frame.getOperandStack().push(new StackValue(BasicType.T_LONG, (long)o));
 
                 break;
             case BasicType.T_DOUBLE:
-                frame.getOperandStack().push(new StackValue(BasicType.T_DOUBLE, (int)o));
+                frame.getOperandStack().pushDouble((double) o);
 
                 break;
             case BasicType.T_OBJECT:
@@ -76,7 +69,41 @@ public class DescriptorStream extends ResourceObj {
 
                 break;
             case BasicType.T_ARRAY:
-                throw new Error("无法识别数组类型");
+                frame.getOperandStack().pushArray((ArrayOop) o, frame);
+                break;
+            default:
+                throw new Error("无法识别的参数类型");
+        }
+    }
+
+    /**
+     * 将不同类型的返回值压入操作数栈中
+     * */
+    public void pushReturnElement(Object o, JavaVFrame frame) {
+        switch (returnElement.getType()) {
+            case BasicType.T_BOOLEAN:
+            case BasicType.T_SHORT:
+            case BasicType.T_CHAR:
+            case BasicType.T_BYTE:
+            case BasicType.T_INT:
+                frame.getOperandStack().push(new StackValue(BasicType.T_INT, (int)o));
+
+                break;
+            case BasicType.T_LONG:
+                frame.getOperandStack().push(new StackValue(BasicType.T_LONG, (long)o));
+
+                break;
+            case BasicType.T_DOUBLE:
+                frame.getOperandStack().pushDouble((double) o);
+
+                break;
+            case BasicType.T_OBJECT:
+                frame.getOperandStack().push(new StackValue(BasicType.T_OBJECT, o));
+
+                break;
+            case BasicType.T_ARRAY:
+                frame.getOperandStack().pushArray((ArrayOop) o, frame);
+                break;
             default:
                 throw new Error("无法识别的参数类型");
         }
@@ -142,15 +169,78 @@ public class DescriptorStream extends ResourceObj {
 
                 // 如果形参类型为数组类型
                 case BasicType.T_ARRAY:
-                    // TODO: 支持从操作数栈中弹出数组类型的值
-                    throw new Error("无法识别数组类型");
+                    values[i] = frame.getOperandStack().popArray(frame);
+                    break;
                 default:
                     throw new Error("无法识别的参数类型: " + info.getType());
             }
         }
 
         return values;
+    }
 
+    /**
+     * 根据字段的类型，从操作数栈中弹出实参值
+     * @return 字段值列表
+     * */
+    public Object getFieldVal(JavaVFrame frame) {
+        Object ret;
+        switch (field.getType()) {
+            // boolean、byte、char、short压入操作数栈时，都是压入的int类型的值，所以从操作数栈中获取的都是对应的int类型的值，需要转换一下
+
+            // 如果字段类型为boolean类型，从操作数栈中弹出boolean类型的值
+            case BasicType.T_BOOLEAN:
+                ret = (int) frame.getOperandStack().pop().getData() == 1;
+                break;
+
+            // 如果字段类型为byte类型，从操作数栈中弹出byte类型的值
+            case BasicType.T_BYTE:
+                ret = (byte) ((int) frame.getOperandStack().pop().getData());
+                break;
+
+            // 如果字段类型为char类型，从操作数栈中弹出char类型的值
+            case BasicType.T_CHAR:
+                ret = (char) ((int) frame.getOperandStack().pop().getData());
+                break;
+
+            // 如果字段类型为short类型，从操作数栈中弹出short类型的值
+            case BasicType.T_SHORT:
+                ret = (short) ((int) frame.getOperandStack().pop().getData());
+                break;
+
+            // 如果字段类型为int类型，从操作数栈中弹出int类型的值
+            case BasicType.T_INT:
+                ret = (int) frame.getOperandStack().pop().getData();
+                break;
+
+            // 如果字段类型为int类型，从操作数栈中弹出int类型的值
+            case BasicType.T_FLOAT:
+                ret = (float) frame.getOperandStack().pop().getData();
+                break;
+
+            // 如果字段类型为long类型，从操作数栈中弹出long类型的值
+            case BasicType.T_LONG:
+                ret = (long) frame.getOperandStack().pop().getData();
+                break;
+
+            // 如果字段类型为double类型，从操作数栈中弹出double类型的值
+            case BasicType.T_DOUBLE:
+                ret = (double) frame.getOperandStack().popDouble();
+                break;
+
+            // 如果字段类型为引用类型，从操作数栈中弹出引用类型的值
+            case BasicType.T_OBJECT:
+                ret = frame.getOperandStack().pop().getData();
+                break;
+
+            // 如果字段类型为数组类型
+            case BasicType.T_ARRAY:
+                ret = frame.getOperandStack().popArray(frame);
+                break;
+            default:
+                throw new Error("无法识别的字段类型: " + field.getType());
+        }
+        return ret;
     }
 
     /**
@@ -308,6 +398,15 @@ public class DescriptorStream extends ResourceObj {
         // 调用解析方法
         returnElement = new DescriptorStream(returnStr).doParse().get(0);
         log.debug("该方法的返回值: " + returnElement);
+    }
+
+    /**
+     * 解析字段类型
+     * */
+    public void parseFiled() {
+        // 调用解析方法
+        field = new DescriptorStream(descriptorInfo).doParse().get(0);
+        log.debug("字段: " + field);
     }
 
     /**

@@ -1,6 +1,7 @@
 package org.xyz.jvm.hotspot.src.share.vm.oops;
 
 import lombok.Data;
+import org.xyz.jvm.hotspot.src.share.vm.classfile.DescriptorStream;
 import org.xyz.jvm.hotspot.src.share.vm.utilities.AccessFlags;
 
 import java.util.HashMap;
@@ -21,6 +22,9 @@ public class MethodInfo {
 
     // 方法名称，从常量池中获取
     private String methodName;
+
+    // 方法描述符
+    private DescriptorStream descriptor;
 
     // 方法所属类
     private InstanceKlass belongKlass;

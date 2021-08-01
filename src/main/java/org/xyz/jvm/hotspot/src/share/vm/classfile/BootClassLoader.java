@@ -2,6 +2,7 @@ package org.xyz.jvm.hotspot.src.share.vm.classfile;
 
 import cn.hutool.core.io.FileUtil;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.xyz.jvm.hotspot.src.share.vm.oops.InstanceKlass;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.util.Map;
  * 根类加载器
  * */
 @Data
+@Slf4j
 public class BootClassLoader {
     // Class文件的扩展名
     public static final String SUFFIX = ".class";
@@ -31,6 +33,14 @@ public class BootClassLoader {
 
     public static void setMainKlass(InstanceKlass mainKlass) {
         BootClassLoader.mainKlass = mainKlass;
+    }
+
+    /**
+     * 判断某个类是否加载过
+     * @param className 需要查找的类全限定名
+     * */
+    public static boolean isLoadedKlass(String className) {
+        return classLoaderData.containsKey(className);
     }
 
     /**
@@ -68,7 +78,7 @@ public class BootClassLoader {
      * @param className 类的全限定名
      * @return 加载完成后生成的Klass模型InstanceKlass
      * */
-    private static InstanceKlass loadKlass(String className) {
+    public static InstanceKlass loadKlass(String className) {
         return loadKlass(className, true);
     }
 
@@ -78,7 +88,7 @@ public class BootClassLoader {
      * @param resolve 加载之后是否要立刻解析
      * @return 加载完成后生成的Klass模型InstanceKlass
      * */
-    private static InstanceKlass loadKlass(String className, boolean resolve) {
+    public static InstanceKlass loadKlass(String className, boolean resolve) {
         // 查询缓存是否已经加载过了，如果是已经加载过的类直接返回
         InstanceKlass klass = findLoadedKlass(className);
         if (klass != null) {
@@ -105,7 +115,8 @@ public class BootClassLoader {
         String classFilePath = searchPath + tmpName + SUFFIX;
 
         // 读取字节码文件
-        byte[] content = FileUtil.readBytes(new File(classFilePath));
+        File classFile = new File(classFilePath);
+        byte[] content = FileUtil.readBytes(classFile);
 
         // 解析字节码文件
         InstanceKlass klass = ClassFileParser.parseClassFile(content);

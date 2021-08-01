@@ -150,10 +150,15 @@ public class ClassFileParser {
             methodInfo.setMethodName(methodInfo.getBelongKlass().getConstantPool().getUtf8(methodInfo.getNameIndex()));
             log.info("解析方法: " + methodInfo.getMethodName());
 
-            // descriptor_index     u2
+            // descriptor_index     u2      直接指向常量池中方法描述符字符串的索引
             Stream.readU2Simple(content, index, u2Arr);
             index += 2;
             methodInfo.setDescriptorIndex(DataTranslate.byteToUnsignedShort(u2Arr));
+
+            // 解析方法描述符
+            DescriptorStream descriptorStream = new DescriptorStream(klass.getConstantPool().getUtf8(methodInfo.getDescriptorIndex()));
+            descriptorStream.parseMethod();
+            methodInfo.setDescriptor(descriptorStream);
 
             // attribute_count  u2
             Stream.readU2Simple(content, index, u2Arr);

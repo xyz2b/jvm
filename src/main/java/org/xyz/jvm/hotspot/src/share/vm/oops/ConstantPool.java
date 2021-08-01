@@ -11,7 +11,7 @@ import java.util.Map;
  * 2.CONSTANT_Integer_info、CONSTANT_Float_info      tag(u1)     bytes[4](u4)                               解析时解析成Integer、Float，获取时再进行类型强转
  * 3.CONSTANT_Long_info、CONSTANT_Double_info:       tag(u1)     bytes[8](u8)                               解析时解析成Long、Double，获取时再进行类型强转
  * 4.CONSTANT_String_info、CONSTANT_Class_info:      tag(u1)     index(u2)                                  获取时获取真正的内容，比如字符串值、类名
- * 5.CONSTANT_NameAndType_info、CONSTANT_Filedref_info、CONSTANT_Methodref_info、CONSTANT_InterfaceMethodref_info:     tag(u1)     index(u2)      index(u2)    解析时两个u2存储在一个int中，获取时进行处理
+ * 5.CONSTANT_NameAndType_info、CONSTANT_Fieldref_info、CONSTANT_Methodref_info、CONSTANT_InterfaceMethodref_info:     tag(u1)     index(u2)      index(u2)    解析时两个u2存储在一个int中，获取时进行处理
  * */
 @Data
 public class ConstantPool {
@@ -162,14 +162,14 @@ public class ConstantPool {
     }
 
     /**
-     * CONSTANT_Filedref_info: class_index + nameAndType_index
-     * @param index Filedref 结构在常量池中的索引
+     * CONSTANT_Fieldref_info: class_index + nameAndType_index
+     * @param index Fieldref 结构在常量池中的索引
      * @return 字段的名字
      * */
-    public String getFiledName(int index) {
+    public String getFieldName(int index) {
         if (!checkIndex(index)) return null;
 
-        // 获取 Filedref 在常量池中的信息(class_index + nameAndType_index)
+        // 获取 Fieldref 在常量池中的信息(class_index + nameAndType_index)
         int data = (int) dataMap.get(index);
 
         // 获取 nameAndType_index，int的后2个字节
@@ -179,14 +179,14 @@ public class ConstantPool {
     }
 
     /**
-     * CONSTANT_Filedref_info: class_index + nameAndType_index
-     * @param index Filedref 结构在常量池中的索引
+     * CONSTANT_Fieldref_info: class_index + nameAndType_index
+     * @param index Fieldref 结构在常量池中的索引
      * @return 字段的描述符
      * */
-    public String getFiledDescriptor(int index) {
+    public String getFieldDescriptor(int index) {
         if (!checkIndex(index)) return null;
 
-        // 获取 Filedref 在常量池中的信息(class_index + nameAndType_index)
+        // 获取 Fieldref 在常量池中的信息(class_index + nameAndType_index)
         int data = (int) dataMap.get(index);
 
         // 获取 nameAndType_index，int的后2个字节
@@ -196,14 +196,14 @@ public class ConstantPool {
     }
 
     /**
-     * CONSTANT_Filedref_info: class_index + nameAndType_index
-     * @param index Filedref 结构在常量池中的索引
+     * CONSTANT_Fieldref_info: class_index + nameAndType_index
+     * @param index Fieldref 结构在常量池中的索引
      * @return 字段所属类的类名
      * */
     public String getClassNameByFieldInfo(int index) {
         if (!checkIndex(index)) return null;
 
-        // 获取 Filedref 在常量池中的信息(class_index + nameAndType_index)
+        // 获取 Fieldref 在常量池中的信息(class_index + nameAndType_index)
         int data = (int) dataMap.get(index);
 
         // 获取 class_index，int的前2个字节

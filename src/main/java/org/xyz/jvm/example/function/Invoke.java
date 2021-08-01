@@ -3,10 +3,9 @@ package org.xyz.jvm.example.function;
 public class Invoke {
 
     public static void main(String[] args) {
-//        invokeStatic();
-
         int i = 10;
         System.out.println(Other.toHexString(i));
+//        invokeStatic();
     }
 
     public static void invokeStatic() {

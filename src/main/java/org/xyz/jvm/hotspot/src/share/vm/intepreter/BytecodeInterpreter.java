@@ -1,18 +1,18 @@
 package org.xyz.jvm.hotspot.src.share.vm.intepreter;
 
 import lombok.extern.slf4j.Slf4j;
+import org.xyz.jvm.hotspot.src.share.vm.classfile.BootClassLoader;
 import org.xyz.jvm.hotspot.src.share.vm.classfile.DescriptorStream;
-import org.xyz.jvm.hotspot.src.share.vm.oops.ArrayOop;
-import org.xyz.jvm.hotspot.src.share.vm.oops.Attribute;
-import org.xyz.jvm.hotspot.src.share.vm.oops.ConstantPool;
-import org.xyz.jvm.hotspot.src.share.vm.oops.MethodInfo;
+import org.xyz.jvm.hotspot.src.share.vm.oops.*;
 import org.xyz.jvm.hotspot.src.share.vm.oops.attribute.CodeAttribute;
+import org.xyz.jvm.hotspot.src.share.vm.prims.JavaNativeInterface;
 import org.xyz.jvm.hotspot.src.share.vm.runtime.JavaThread;
 import org.xyz.jvm.hotspot.src.share.vm.runtime.JavaVFrame;
 import org.xyz.jvm.hotspot.src.share.vm.runtime.StackValue;
 import org.xyz.jvm.hotspot.src.share.vm.runtime.StackValueCollection;
 import org.xyz.jvm.hotspot.src.share.vm.utilities.BasicType;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -52,9 +52,39 @@ public class BytecodeInterpreter {
                     ldc(currentThread, code);
                     break;
                 }
+                case ByteCodes.NEW: {
+                    log.info("执行指令: new，该指令功能为: 创建一个对象，并将其引用压入栈顶");
+                    jNew(currentThread, code);
+                    break;
+                }
                 case ByteCodes.RETURN:  {
                     log.info("执行指令: return，该指令功能为: 从方法中返回void，恢复调用者的栈帧，并且把程序的控制权交回调用者");
                     jReturn(currentThread);
+                    break;
+                }
+                case ByteCodes.IRETURN:  {
+                    log.info("执行指令: ireturn，该指令功能为: 从方法中返回int类型数据，恢复调用者的栈帧，并且把程序的控制权交回调用者");
+                    iReturn(currentThread);
+                    break;
+                }
+                case ByteCodes.LRETURN:  {
+                    log.info("执行指令: lreturn，该指令功能为: 从方法中返回long类型数据，恢复调用者的栈帧，并且把程序的控制权交回调用者");
+                    lReturn(currentThread);
+                    break;
+                }
+                case ByteCodes.FRETURN:  {
+                    log.info("执行指令: freturn，该指令功能为: 从方法中返回float类型数据，恢复调用者的栈帧，并且把程序的控制权交回调用者");
+                    fReturn(currentThread);
+                    break;
+                }
+                case ByteCodes.DRETURN:  {
+                    log.info("执行指令: dreturn，该指令功能为: 从方法中返回double类型数据，恢复调用者的栈帧，并且把程序的控制权交回调用者");
+                    dReturn(currentThread);
+                    break;
+                }
+                case ByteCodes.ARETURN:  {
+                    log.info("执行指令: areturn，该指令功能为: 从方法中返回引用类型数据，恢复调用者的栈帧，并且把程序的控制权交回调用者");
+                    aReturn(currentThread);
                     break;
                 }
                 case ByteCodes.GETSTATIC: {
@@ -62,9 +92,39 @@ public class BytecodeInterpreter {
                     getStatic(currentThread, code);
                     break;
                 }
+                case ByteCodes.PUTSTATIC: {
+                    log.info("执行指令: putstatic，该指令功能为: 为指定类的静态字段赋值");
+                    putStatic(currentThread, code);
+                    break;
+                }
+                case ByteCodes.GETFIELD: {
+                    log.info("执行指令: getField，该指令功能为: 获取对象的属性值并压入操作数栈");
+                    getField(currentThread, code);
+                    break;
+                }
+                case ByteCodes.PUTFIELD: {
+                    log.info("执行指令: putField，该指令功能为: 设置对象的属性值");
+                    putField(currentThread, code);
+                    break;
+                }
                 case ByteCodes.INVOKEVIRTUAL: {
                     log.info("执行指令: invokevirtual，该指令功能为: 调用实例方法，依据实例的类型进行分派，这个方法不能使实例初始化方法也不能是类或接口的初始化方法（静态初始化方法）");
                     invokeVirtual(currentThread, code);
+                    break;
+                }
+                case ByteCodes.INVOKESTATIC: {
+                    log.info("执行指令: invokestatic，该指令功能为: 调用静态方法，即static修饰的方法");
+                    invokeStatic(currentThread, code);
+                    break;
+                }
+                case ByteCodes.INVOKESPECIAL: {
+                    log.info("执行指令: invokespecial，该指令功能为: 调用实例方法，专门用来调用父类方法、私有方法和实例初始化方法");
+                    invokeSpecial(currentThread, code);
+                    break;
+                }
+                case ByteCodes.INVOKEINTERFACE: {
+                    log.info("执行指令: invokeinterface，该指令功能为: 调用接口方法");
+                    invokeInterface(currentThread, code);
                     break;
                 }
                 case ByteCodes.BIPUSH: {
@@ -6055,28 +6115,133 @@ public class BytecodeInterpreter {
     }
 
     /**
-     * 如何找到一个类
-     * 1.系统类（java开头）通过反射找到对应的类（反射原理就是从类加载器的缓存空间中找到对应类的klass模型然后通过klass模型再找到Class对象）
-     * 2.自己加载的类通过在类加载器的缓存空间中找对应的klass（类对应的klass模型会存储在加载它的那个类加载器的缓存空间中，所以只需要在类加载器的缓存空间中通过类的全限定名找到对应的klass模型即可）
-     *
-     * 执行invokevirtual字节码指令
-     * 该指令功能为: 调用实例方法，依据实例的类型进行分派，这个方法不能使实例初始化方法也不能是类或接口的初始化方法（静态初始化方法）
+     * 执行new字节码指令
+     * 只分配内存
+     *      Integer: 没有不带参数的构造函数
+     *      String: 调用不带参数的构造函数，返回空
+     * 该指令功能为: 创建一个对象，并将其引用压入栈顶
      * @param currentThread 当前线程
      * @param code 当前方法的指令段
      * */
-    private static void invokeVirtual(JavaThread currentThread, ByteCodeStream code) {
+    private static void jNew(JavaThread currentThread, ByteCodeStream code) {
         // 获取栈帧
         JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
         // 操作数栈
         StackValueCollection stack = frame.getOperandStack();
         // 运行时常量池（运行时常量池就是 klass）
         ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
-        // 取出操作数，INVOKEVIRTUAL指令的操作数是常量池的索引（Methodref），占两个字节
+        // 取出操作数，new指令的操作数是常量池的索引（Class），占两个字节
         int operand = code.getUnsignedShort();
 
-        String className = constantPool.getClassNameByFieldInfo(operand);
+        String className = constantPool.getClassName(operand).replace('/', '.');
+
+        try {
+            Class<?> clazz = Class.forName(className);
+            Constructor<?> constructor = clazz.getConstructor();
+            Object object = constructor.newInstance();
+
+            if (object instanceof Throwable) {
+                frame.getOperandStack().push(new StackValue(BasicType.T_Throwable, object));
+            } else {
+                frame.getOperandStack().push(new StackValue(BasicType.T_OBJECT, object));
+            }
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            /*
+             * 如果没有无参构造函数，就传null，保证栈帧平衡
+             * 后面调用到构造方法的时候进行判断处理
+             */
+            frame.getOperandStack().push(new StackValue(BasicType.T_OBJECT, null));
+        }
+    }
+
+    /**
+     * 执行invokeinterface字节码指令
+     * 可以用两种方式实现:
+     * 1.借助反射
+     * 2.走自己的逻辑
+     * 该指令功能为: 调用接口方法
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void invokeInterface(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 运行时常量池（运行时常量池就是 klass）
+        ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
+        // 取出操作数，invokevirtual指令的操作数是常量池的索引（Methodref），占两个字节
+        int operand = code.getUnsignedShort();
+
+        String className = constantPool.getClassNameByFieldInfo(operand).replace('/', '.');
         String methodName = constantPool.getMethodName(operand);
-        String descriptorName = constantPool.getFiledDescriptor(operand);
+        String descriptorName = constantPool.getFieldDescriptor(operand);
+
+        log.info("执行方法: " + className + ":" + methodName + "#" + descriptorName);
+
+        // 解析方法描述符
+        DescriptorStream descriptorStream = new DescriptorStream(descriptorName);
+        descriptorStream.parseMethod();
+        // 获取方法所有形参类型的Class对象按照形参顺序组成的数组
+        Class<?>[] paramsClass = descriptorStream.getParamsType();
+
+        // 从操作数栈中根据形类型 顺序 获取实参，即从操作数栈中弹出实参
+        Object[] params = descriptorStream.getParamsVal(frame);
+
+        // 从操作数栈中弹出 被调方法所属类的对象，即this指针
+        Object obj = frame.getOperandStack().pop().getData();
+
+        try {
+            Method fun = obj.getClass().getMethod(methodName, paramsClass);
+
+            /**
+             * 处理：
+             *  1.无返回值
+             *  2.有返回值，需要将返回值压入操作数中（return字节码指令在从被调用方的操作数栈中取出返回值，压入调用方的操作数栈中）
+             */
+            if (BasicType.T_VOID == descriptorStream.getReturnElement().getType()) {
+                fun.invoke(obj, params);
+            } else {
+                descriptorStream.pushReturnElement(fun.invoke(obj, params), frame);
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 如何找到一个类
+     * 1.系统类（java开头）通过反射找到对应的类（反射原理就是从类加载器的缓存空间中找到对应类的klass模型然后通过klass模型再找到Class对象）
+     * 2.自己加载的类通过在类加载器的缓存空间中找对应的klass（类对应的klass模型会存储在加载它的那个类加载器的缓存空间中，所以只需要在类加载器的缓存空间中通过类的全限定名找到对应的klass模型即可）
+     *
+     * 执行invokevirtual字节码指令
+     * 调用虚方法
+     * 1.public修饰
+     * 2.protected修饰
+     * 需要有被调用方法所属类的对象信息，即this指针
+     * 该指令功能为: 调用实例方法，依据实例的类型进行分派，这个方法不能使实例初始化方法也不能是类或接口的初始化方法（静态初始化方法）
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void invokeVirtual(JavaThread currentThread, ByteCodeStream code) {
+        log.info("执行指令: invokevirtual( java体系的借助反射实现，自己定义的类自己实现 )");
+
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 运行时常量池（运行时常量池就是 klass）
+        ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
+        // 取出操作数，invokevirtual指令的操作数是常量池的索引（Methodref），占两个字节
+        int operand = code.getUnsignedShort();
+
+        String className = constantPool.getClassNameByFieldInfo(operand).replace('/', '.');
+        String methodName = constantPool.getMethodName(operand);
+        String descriptorName = constantPool.getFieldDescriptor(operand);
+
+        log.info("执行方法: " + className + ":" + methodName + "#" + descriptorName);
 
         // 系统加载的类走反射
         if (className.startsWith("java")) {
@@ -6089,8 +6254,8 @@ public class BytecodeInterpreter {
             // 从操作数栈中根据形类型 顺序 获取实参，即从操作数栈中弹出实参
             Object[] params = descriptorStream.getParamsVal(frame);
 
-            // 从操作数栈中弹出 被调方法所属类的对象（GETSTATIC压入栈中的），即this指针
-            Object obj = frame.getOperandStack().pop().getObject();
+            // 从操作数栈中弹出 被调方法所属类的对象，即this指针
+            Object obj = frame.getOperandStack().pop().getData();
 
             try {
                 Method fun = obj.getClass().getMethod(methodName, paramsClass);
@@ -6098,22 +6263,328 @@ public class BytecodeInterpreter {
                 /**
                  * 处理：
                  *  1.无返回值
-                 *  2.有返回值，需要将返回值压入操作数中
+                 *  2.有返回值，需要将返回值压入操作数中（return字节码指令在从被调用方的操作数栈中取出返回值，压入调用方的操作数栈中）
                  */
                 if (BasicType.T_VOID == descriptorStream.getReturnElement().getType()) {
                     fun.invoke(obj, params);
                 } else {
-                    descriptorStream.pushField(fun.invoke(obj, params), frame);
+                    descriptorStream.pushReturnElement(fun.invoke(obj, params), frame);
                 }
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
-        } else {    // TODO: 自己加载的类自己处理
+        } else {
+            // 在类加载器的缓存中查找是否有该类，没有就触发加载
+            if (!BootClassLoader.isLoadedKlass(className)) {
+                log.info("类[" + className + "]还未加载，开始加载");
+                BootClassLoader.loadKlass(className);
+            }
 
+            // 在类加载器的缓存中找到对应的类
+            InstanceKlass klass = BootClassLoader.findLoadedKlass(className);
+            // 在对应的类中找到对应的方法
+            MethodInfo method = JavaNativeInterface.getMethod(klass, methodName, descriptorName);
+            if (null == method) {
+                throw new Error("不存在的方法: " + methodName + "#" + descriptorName);
+            }
+
+            // 同一个方法重复调用问题: 该方法的程序计数器如果没有重置，会导致下一次调用是从上一次调用完之后的指令位置开始，导致出错
+            // 调用某一个方法之前，需要重置该方法的程序计数器，避免上面所说的重复调用的问题
+            CodeAttribute codeAttributeInfo = (CodeAttribute) method.getAttributes().get(CodeAttribute.JVM_ATTRIBUTE_Code);
+            // 重置程序计数器
+            codeAttributeInfo.getCode().reset();
+
+            JavaNativeInterface.callMethod(method);
+        }
+    }
+
+    /**
+     * 执行invokestatic字节码指令
+     * 该指令功能为: 调用静态方法，即static修饰的方法
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void invokeStatic(JavaThread currentThread, ByteCodeStream code) {
+        log.info("执行指令: invokestatic( java体系的借助反射实现，自己定义的类自己实现 )");
+
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 运行时常量池（运行时常量池就是 klass）
+        ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
+        // 取出操作数，invokestatic指令的操作数是常量池的索引（Methodref），占两个字节
+        int operand = code.getUnsignedShort();
+
+        String className = constantPool.getClassNameByFieldInfo(operand).replace('/', '.');
+        String methodName = constantPool.getMethodName(operand);
+        String descriptorName = constantPool.getFieldDescriptor(operand);
+
+        log.info("执行方法: " + className + ":" + methodName + "#" + descriptorName);
+
+        // 系统加载的类走反射
+        if (className.startsWith("java")) {
+            // 解析方法描述符
+            DescriptorStream descriptorStream = new DescriptorStream(descriptorName);
+            descriptorStream.parseMethod();
+            // 获取方法所有形参类型的Class对象按照形参顺序组成的数组
+            Class<?>[] paramsClass = descriptorStream.getParamsType();
+
+            // 从操作数栈中根据形类型 顺序 获取实参，即从操作数栈中弹出实参
+            Object[] params = descriptorStream.getParamsVal(frame);
+
+            try {
+                // 通过反射获取静态方法所属类的Class对象
+                Class<?> clazz = Class.forName(className.replace('/', '.'));
+                // 找到被调用的静态方法
+                Method fun = clazz.getMethod(methodName, paramsClass);
+
+                /**
+                 * 处理：
+                 *  1.无返回值
+                 *  2.有返回值，需要将返回值压入操作数中（return字节码指令在从被调用方的操作数栈中取出返回值，压入调用方的操作数栈中）
+                 */
+                if (BasicType.T_VOID == descriptorStream.getReturnElement().getType()) {
+                    fun.invoke(clazz, params);
+                } else {
+                    descriptorStream.pushReturnElement(fun.invoke(clazz, params), frame);
+                }
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // 在类加载器的缓存中找到对应的类
+            InstanceKlass klass = BootClassLoader.findLoadedKlass(className);
+            // 在类加载器的缓存中查找是否有该类，没有就触发加载
+            if (null == klass) {
+                log.info("类[" + className + "]还未加载，开始加载");
+                klass = BootClassLoader.loadKlass(className);
+            }
+
+            // 在对应的类中找到对应的方法
+            MethodInfo method = JavaNativeInterface.getMethod(klass, methodName, descriptorName);
+            if (null == method) {
+                throw new Error("不存在的方法: " + methodName + "#" + descriptorName);
+            }
+
+            // 同一个方法重复调用问题: 该方法的程序计数器如果没有重置，会导致下一次调用是从上一次调用完之后的指令位置开始，导致出错
+            // 调用某一个方法之前，需要重置该方法的程序计数器，避免上面所说的重复调用的问题
+            CodeAttribute codeAttributeInfo = (CodeAttribute) method.getAttributes().get(CodeAttribute.JVM_ATTRIBUTE_Code);
+            // 重置程序计数器
+            codeAttributeInfo.getCode().reset();
+
+            JavaNativeInterface.callStaticMethod(method);
+        }
+    }
+
+    /**
+     * 执行invokespecial字节码指令
+     * 调用:
+     * 1.构造方法
+     * 2.私有方法
+     * 3.父类方法（super）
+     * 该指令功能为: 调用实例方法，专门用来调用父类方法、私有方法和实例初始化方法
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void invokeSpecial(JavaThread currentThread, ByteCodeStream code) {
+        log.info("执行指令: invokespecial( java体系的借助反射实现，自己定义的类自己实现 )");
+
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 运行时常量池（运行时常量池就是 klass）
+        ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
+        // 取出操作数，invokestatic指令的操作数是常量池的索引（Methodref），占两个字节
+        int operand = code.getUnsignedShort();
+
+        String className = constantPool.getClassNameByFieldInfo(operand).replace('/', '.');
+        String methodName = constantPool.getMethodName(operand);
+        String descriptorName = constantPool.getFieldDescriptor(operand);
+
+        log.info("执行方法: " + className + ":" + methodName + "#" + descriptorName);
+
+        // 系统加载的类走反射
+        if (className.startsWith("java")) {
+            // 解析方法描述符
+            DescriptorStream descriptorStream = new DescriptorStream(descriptorName);
+            descriptorStream.parseMethod();
+            // 获取方法所有形参类型的Class对象按照形参顺序组成的数组
+            Class<?>[] paramsClass = descriptorStream.getParamsType();
+
+            // 从操作数栈中根据形类型 顺序 获取实参，即从操作数栈中弹出实参
+            Object[] params = descriptorStream.getParamsVal(frame);
+
+            /*
+             * 1、为什么执行这步?
+             *      因为非静态方法调用前都会压入对象指针，构建环境时给this赋值
+             *      而java体系，我的设计中走的是反射机制，不需要手动给this赋值。所以需要手动完成出栈，保持堆栈平衡
+             * 2、为什么要放在去参数后面？因为参数在对象引用（this）上面
+             * --------
+             * | 参数2 |
+             * --------
+             * | 参数1 |
+             * --------
+             * | this |
+             * --------
+             */
+            StackValue stackValue = frame.getOperandStack().pop();
+            Object object = stackValue.getObject();
+
+            // 判断调用的是构造方法还是普通方法
+            if (methodName.equals("<init>")) {
+                if (null == object || object.equals("")) {
+                    // 这里判空的原因
+                    // 1.在jvm层面，new只是在堆中分配了内存，此时是没有java对象实体的。因为是用java模拟的，所以jvm返回给我们java的是没有映射实体的，为null
+                    // 2.执行new字节码指令时，对于没有无参数构造函数的类创建对象的处理逻辑是 直接在栈中压入了null
+                    log.info("\t new字节码指令未创建对象的，在这里创建");
+                    try {
+                        Class<?> clazz = Class.forName(className);
+                        Constructor<?> constructor = clazz.getConstructor(paramsClass);
+                        object = constructor.newInstance(params);
+                    } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                /*
+                * 1.所有类都会继承自Object类
+                * 2.所有类的构造方法中都会先执行父类的构造方法
+                * 3.示例代码中的类没有显示继承，所以继承自Object类
+                * 4.执行Object类的构造方法时，在invokespecial字节码指令之前没有dup（和执行其他类的构造方法的字节码指令不一样），只是把this指针压栈，
+                *   而上面弹出了这个this指针，所以这里peek会获取到空报异常
+                * */
+                if (!className.equals("java.lang.Object")) {
+                    /*
+                     * 执行new字节码指令时，会将对象引用(this)压入操作数栈中
+                     * 然后再执行invokespecial字节码指令调用构造方法前，还会执行dup指令，将上面new压入栈的this指针复制一份再压入栈中（执行Object类的构造方法除外）
+                     * 之后再压入执行构造方法的参数，最后才会执行invokespecial字节码指令
+                     *
+                     * 所以指向invokespecial字节码指令之前的操作数栈如下
+                     * --------
+                     * | 参数2 |
+                     * --------
+                     * | 参数1 |
+                     * --------
+                     * | this |
+                     * --------
+                     * | this |
+                     * --------
+                     *
+                     * 执行invokespecial字节码指令前，pop出了实参值，然后pop出了一个this指针，操作数栈中还剩一个this指针
+                     * 所以当执行完invokespecial字节码指令之后，真正创建了对象，就要将这个对象的引用赋值给栈顶那个this指针
+                     * */
+                    // 注意：这里应该是给栈帧顶部的StackValue赋值，而不是创建新的压栈
+                    frame.getOperandStack().peek().setObject(object);
+                }
+            } else {
+                // java体系，非构造方法
+                throw new Error("java体系，非构造方法，未做处理");
+            }
+        } else {    // 非JVM系统加载的类，自己处理
+            // 在类加载器的缓存中找到对应的类
+            InstanceKlass klass = BootClassLoader.findLoadedKlass(className);
+            // 在类加载器的缓存中查找是否有该类，没有就触发加载
+            if (null == klass) {
+                log.info("类[" + className + "]还未加载，开始加载");
+                klass = BootClassLoader.loadKlass(className);
+            }
+
+            // 在对应的类中找到对应的方法
+            MethodInfo method = JavaNativeInterface.getMethod(klass, methodName, descriptorName);
+            if (null == method) {
+                throw new Error("不存在的方法: " + methodName + "#" + descriptorName);
+            }
+
+            // 同一个方法重复调用问题: 该方法的程序计数器如果没有重置，会导致下一次调用是从上一次调用完之后的指令位置开始，导致出错
+            // 调用某一个方法之前，需要重置该方法的程序计数器，避免上面所说的重复调用的问题
+            CodeAttribute codeAttributeInfo = (CodeAttribute) method.getAttributes().get(CodeAttribute.JVM_ATTRIBUTE_Code);
+            // 重置程序计数器
+            codeAttributeInfo.getCode().reset();
+
+            JavaNativeInterface.callMethod(method);
+        }
+    }
+
+    /**
+     * 执行getfield字节码指令
+     * 该指令功能为: 获取对象的属性值并压入操作数栈
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void getField(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 运行时常量池（运行时常量池就是 klass）
+        ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
+
+        // 取出操作数，getfield指令的操作数是常量池的索引（Fieldref），占两个字节
+        int operand = code.getUnsignedShort();
+
+        String className = constantPool.getClassNameByFieldInfo(operand).replace('/', '.');
+        String fieldName = constantPool.getFieldName(operand);
+        String descriptorName = constantPool.getFieldDescriptor(operand);
+
+        // 解析字段描述符
+        DescriptorStream descriptorStream = new DescriptorStream(descriptorName);
+        descriptorStream.parseFiled();
+
+        // 从操作数栈中弹出 属性所属类的对象，即this指针
+        Object obj = frame.getOperandStack().pop().getData();
+
+        try {
+            Class<?> clazz = Class.forName(className);
+            Field field = clazz.getField(fieldName);
+
+            // 如果字段不是静态字段的话，Field.get(Object)要传入反射类的对象（实例属性和对象绑定）。如果传null会报: java.lang.NullPointerException
+            // 如果字段是静态字段的话，Field.get(Object)传入任何对象都是可以的（类属性和类绑定），包括null
+            descriptorStream.pushField(field.get(obj), frame);
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 执行putfield字节码指令
+     * 该指令功能为: 设置对象的属性值
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void putField(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 运行时常量池（运行时常量池就是 klass）
+        ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
+
+        // 取出操作数，putfield指令的操作数是常量池的索引（Fieldref），占两个字节
+        int operand = code.getUnsignedShort();
+
+        String className = constantPool.getClassNameByFieldInfo(operand).replace('/', '.');
+        String fieldName = constantPool.getFieldName(operand);
+        String descriptorName = constantPool.getFieldDescriptor(operand);
+
+        // 解析字段描述符
+        DescriptorStream descriptorStream = new DescriptorStream(descriptorName);
+        descriptorStream.parseFiled();
+
+        // 从栈中取出对应类型的字段值
+        Object value = descriptorStream.getFieldVal(frame);
+
+        // 从操作数栈中弹出 属性所属类的对象，即this指针
+        Object obj = frame.getOperandStack().pop().getData();
+
+        try {
+            Class<?> clazz = Class.forName(className);
+            Field field = clazz.getField(fieldName);
+
+            field.set(obj, value);
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 
@@ -6131,31 +6602,189 @@ public class BytecodeInterpreter {
         // 运行时常量池（运行时常量池就是 klass）
         ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
 
-        // 取出操作数，GETSTATIC指令的操作数是常量池的索引（Fieldref），占两个字节
+        // 取出操作数，getstatic指令的操作数是常量池的索引（Fieldref），占两个字节
         int operand = code.getUnsignedShort();
 
-        String className = constantPool.getClassNameByFieldInfo(operand);
-        String fieldName = constantPool.getFiledName(operand);
+        String className = constantPool.getClassNameByFieldInfo(operand).replace('/', '.');
+        String fieldName = constantPool.getFieldName(operand);
+        String descriptorName = constantPool.getFieldDescriptor(operand);
 
-        // 系统加载的类走反射
-        if (className.startsWith("java")) {
-            try {
-                Class<?> clazz = Class.forName(className.replace('/', '.'));
-                Field field = clazz.getField(fieldName);
+        // 解析字段描述符
+        DescriptorStream descriptorStream = new DescriptorStream(descriptorName);
+        descriptorStream.parseFiled();
 
-                // 如果字段不是静态字段的话，Field.get(Object)要传入反射类的对象（实例属性和对象绑定）。如果传null会报: java.lang.NullPointerException
-                // 如果字段是静态字段的话，Field.get(Object)传入任何对象都是可以的（类属性和类绑定），包括null
-                stack.push(new StackValue(BasicType.T_OBJECT, field.get(null)));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        } else {    // TODO: 自己加载的类自己处理
+        try {
+            Class<?> clazz = Class.forName(className);
+            Field field = clazz.getField(fieldName);
 
+            // 如果字段不是静态字段的话，Field.get(Object)要传入反射类的对象（实例属性和对象绑定）。如果传null会报: java.lang.NullPointerException
+            // 如果字段是静态字段的话，Field.get(Object)传入任何对象都是可以的（类属性和类绑定），包括null
+            descriptorStream.pushField(field.get(null), frame);
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
         }
+    }
+
+    /**
+     * 执行putstatic字节码指令
+     * 该指令功能为: 为指定类的静态字段赋值
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void putStatic(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 运行时常量池（运行时常量池就是 klass）
+        ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
+
+        // 取出操作数，putstatic指令的操作数是常量池的索引（Fieldref），占两个字节
+        int operand = code.getUnsignedShort();
+
+        String className = constantPool.getClassNameByFieldInfo(operand).replace('/', '.');
+        String fieldName = constantPool.getFieldName(operand);
+        String descriptorName = constantPool.getFieldDescriptor(operand);
+
+        // 解析字段描述符
+        DescriptorStream descriptorStream = new DescriptorStream(descriptorName);
+        descriptorStream.parseFiled();
+        // 从栈中取出对应类型的字段值
+        Object value = descriptorStream.getFieldVal(frame);
+
+        try {
+            Class<?> clazz = Class.forName(className);
+            Field field = clazz.getField(fieldName);
+
+            field.set(null, value);
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 执行areturn字节码指令
+     * 该指令功能为: 从方法中返回引用类型数据，恢复调用者的栈帧，并且把程序的控制权交回调用者
+     * @param currentThread 当前线程
+     * */
+    private static void aReturn(JavaThread currentThread) {
+        // 获取当前栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 当前栈帧的操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 从当前栈帧的操作数栈中弹出返回值
+        StackValue ret = stack.peek();
+        if (ret.getType() != BasicType.T_OBJECT && ret.getType() != BasicType.T_ARRAY) {
+            log.error("areturn字节码指令: 不匹配的数据类型: " + ret.getType());
+            throw new Error("areturnn字节码指令: 不匹配的数据类型" + ret.getType());
+        }
+        ret = stack.pop();
+
+        // pop出当前栈帧
+        currentThread.getStack().pop();
+        log.info("\t 剩余栈帧数量: " + currentThread.getStack().size());
+
+        // 将返回值压入调用者栈帧
+        ((JavaVFrame) currentThread.getStack().peek()).getOperandStack().push(ret);
+    }
+
+    /**
+     * 执行dreturn字节码指令
+     * 该指令功能为: 从方法中返回double类型数据，恢复调用者的栈帧，并且把程序的控制权交回调用者
+     * @param currentThread 当前线程
+     * */
+    private static void dReturn(JavaThread currentThread) {
+        // 获取当前栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 当前栈帧的操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 从当前栈帧的操作数栈中弹出返回值
+        double ret = stack.popDouble();
+
+        // pop出当前栈帧
+        currentThread.getStack().pop();
+        log.info("\t 剩余栈帧数量: " + currentThread.getStack().size());
+
+        // 将返回值压入调用者栈帧
+        ((JavaVFrame) currentThread.getStack().peek()).getOperandStack().pushDouble(ret);
+    }
+
+    /**
+     * 执行freturn字节码指令
+     * 该指令功能为: 从方法中返回float类型数据，恢复调用者的栈帧，并且把程序的控制权交回调用者
+     * @param currentThread 当前线程
+     * */
+    private static void fReturn(JavaThread currentThread) {
+        // 获取当前栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 当前栈帧的操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 从当前栈帧的操作数栈中弹出返回值
+        StackValue ret = stack.peek();
+        if (ret.getType() != BasicType.T_FLOAT) {
+            log.error("freturn字节码指令: 不匹配的数据类型" + ret.getType());
+            throw new Error("freturnn字节码指令: 不匹配的数据类型" + ret.getType());
+        }
+        ret = stack.pop();
+
+        // pop出当前栈帧
+        currentThread.getStack().pop();
+        log.info("\t 剩余栈帧数量: " + currentThread.getStack().size());
+
+        // 将返回值压入调用者栈帧
+        ((JavaVFrame) currentThread.getStack().peek()).getOperandStack().push(ret);
+    }
+
+    /**
+     * 执行lreturn字节码指令
+     * 该指令功能为: 从方法中返回long类型数据，恢复调用者的栈帧，并且把程序的控制权交回调用者
+     * @param currentThread 当前线程
+     * */
+    private static void lReturn(JavaThread currentThread) {
+        // 获取当前栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 当前栈帧的操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 从当前栈帧的操作数栈中弹出返回值
+        StackValue ret = stack.peek();
+        if (ret.getType() != BasicType.T_LONG) {
+            log.error("lreturn字节码指令: 不匹配的数据类型" + ret.getType());
+            throw new Error("lreturnn字节码指令: 不匹配的数据类型" + ret.getType());
+        }
+        ret = stack.pop();
+
+        // pop出当前栈帧
+        currentThread.getStack().pop();
+        log.info("\t 剩余栈帧数量: " + currentThread.getStack().size());
+
+        // 将返回值压入调用者栈帧
+        ((JavaVFrame) currentThread.getStack().peek()).getOperandStack().push(ret);
+    }
+
+    /**
+     * 执行ireturn字节码指令
+     * 该指令功能为: 从方法中返回int类型数据，恢复调用者的栈帧，并且把程序的控制权交回调用者
+     * @param currentThread 当前线程
+     * */
+    private static void iReturn(JavaThread currentThread) {
+        // 获取当前栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 当前栈帧的操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 从当前栈帧的操作数栈中弹出返回值
+        StackValue ret = stack.peek();
+        if (ret.getType() != BasicType.T_INT) {
+            log.error("ireturn字节码指令: 不匹配的数据类型" + ret.getType());
+            throw new Error("ireturnn字节码指令: 不匹配的数据类型" + ret.getType());
+        }
+        ret = stack.pop();
+
+        // pop出当前栈帧
+        currentThread.getStack().pop();
+        log.info("\t 剩余栈帧数量: " + currentThread.getStack().size());
+
+        // 将返回值压入调用者栈帧
+        ((JavaVFrame) currentThread.getStack().peek()).getOperandStack().push(ret);
     }
 
     /**
