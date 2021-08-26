@@ -6208,6 +6208,9 @@ public class BytecodeInterpreter {
         // 取出操作数，invokevirtual指令的操作数是常量池的索引（Methodref），占两个字节
         int operand = code.getUnsignedShort();
 
+        code.getU1Code();
+        code.getU1Code();
+
         String className = constantPool.getClassNameByFieldInfo(operand).replace('/', '.');
         String methodName = constantPool.getMethodName(operand);
         String descriptorName = constantPool.getFieldDescriptor(operand);
@@ -6227,7 +6230,8 @@ public class BytecodeInterpreter {
         Object obj = frame.getOperandStack().pop().getData();
 
         try {
-            Method fun = obj.getClass().getMethod(methodName, paramsClass);
+            Class<?> clazz = Class.forName(className.replace("/", "."));
+            Method fun = clazz.getMethod(methodName, paramsClass);
 
             /**
              * 处理：
@@ -6239,7 +6243,7 @@ public class BytecodeInterpreter {
             } else {
                 descriptorStream.pushReturnElement(fun.invoke(obj, params), frame);
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

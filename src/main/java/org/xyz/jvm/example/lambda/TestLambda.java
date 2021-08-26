@@ -2,10 +2,10 @@ package org.xyz.jvm.example.lambda;
 
 public class TestLambda {
     public static void main(String[] args) {
-        CustomLambda obj = () -> {
-            System.out.println("hello");
+        CustomLambda obj = (x) -> {
+            System.out.println(x);
         };
 
-        obj.run();
+        obj.run(1);
     }
 }
