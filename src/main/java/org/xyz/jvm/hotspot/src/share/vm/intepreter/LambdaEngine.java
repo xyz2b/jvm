@@ -78,9 +78,21 @@ public class LambdaEngine {
             // unreflect: lambda生成的方法 org/xyz/jvm/example/lambda/TestLambda.lambda$main$0 的 MethodHandle
             CallSite callSite = LambdaMetafactory.metafactory(lookup, sourceMethodName, factorType, type, unreflect, type);
 
+            // 这里的MethodHandle就是下面生成的类中构造方法
             MethodHandle target = callSite.getTarget();
 
             return target.invoke();
+            /*
+            * 最后生成的类
+            * package org.xyz.jvm.example.lambda;
+            *
+            * final class TestLambda$$Lambda$1 implements CustomLambda {
+            *   private TestLambda$$Lambda$1() {}
+            *
+            *   // 这里将run方法和lambda生成的方法对应起来了
+            *   public void run() { TestLambda.lambda$main$0(); }
+            * }
+            * */
 
             /*
             * 调用方法的方式
