@@ -127,6 +127,11 @@ public class BytecodeInterpreter {
                     invokeInterface(currentThread, code);
                     break;
                 }
+                case ByteCodes.INVOKEDYNAMIC: {
+                    log.info("执行指令: invokedynamic，该指令功能为: 调用动态方法");
+                    invokeDynamic(currentThread, code);
+                    break;
+                }
                 case ByteCodes.BIPUSH: {
                     log.info("执行指令: bipush，该指令功能为: 将立即数byte带符号扩展为一个int类型的值，然后压入操作数栈中");
                     bIPush(currentThread, code);
@@ -982,6 +987,34 @@ public class BytecodeInterpreter {
             }
         }
     }
+
+    /**
+     * 执行invokedymaic字节码指令
+     * 该指令功能为: 调用动态方法
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void invokeDynamic(JavaThread currentThread, ByteCodeStream code) {
+        // TODO: invokeDynamic字节码执行执行
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 方法信息
+        MethodInfo method = code.getBelongMethod();
+
+        int code1 = code.getU1Code();
+        int code2 = code.getU1Code();
+        int code3 = code.getU1Code();
+        int code4 = code.getU1Code();
+
+        int index = code1 << 8 | code2;
+
+        Object object = new LambdaEngine(method, index).createObject();
+
+        stack.push(new StackValue(BasicType.T_OBJECT, object));
+    }
+
 
     /**
      * 执行sastore字节码指令

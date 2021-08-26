@@ -297,11 +297,150 @@ public class ClassFileParser {
                     index = parseStackMapTable(content, index, attributeNameIndex, attributeLength, attributeName, attributes);
                     break;
                 }
+                case JVM_ATTRIBUTE_BootstrapMethods: {
+                    index = parseBootstrapMethods(content, index, attributeNameIndex, attributeLength, attributeName, attributes);
+                    break;
+                }
+                case JVM_ATTRIBUTE_InnerClasses: {
+                    index = parseInnerClasses(content, index, attributeNameIndex, attributeLength, attributeName, attributes);
+                    break;
+                }
                 default:
                     throw new Error("无法识别的属性项: " + attributeName);
             }
         }
 
+        return index;
+    }
+
+    /**
+     * 解析 InnerClasses 属性
+     * @param content 字节流
+     * @param index 当前解析索引
+     * @param attributeNameIndex    属性名在常量池中的索引
+     * @param attributeLength       属性长度(Byte)
+     * @param attributeName     属性名
+     * @param attributes        解析出来属性的存储容器
+     * @return 解析完成之后的当前解析索引
+     * */
+    private static int parseInnerClasses(byte[] content, int index, int attributeNameIndex, int attributeLength, String attributeName, Map<String, Attribute> attributes) {
+        // 中转字节数组，可复用
+        byte[] u2Arr = new byte[2];
+
+        InnerClassAttribute innerClassAttribute = new InnerClassAttribute();
+        StackMapTableAttribute stackMapTableAttribute = new StackMapTableAttribute();
+        stackMapTableAttribute.setAttributeNameIndex(attributeNameIndex);
+        stackMapTableAttribute.setAttributeLength(attributeLength);
+
+        //  内部类的数量    u2
+        Stream.readU2Simple(content, index, u2Arr);
+        index += 2;
+        innerClassAttribute.setNumberOfClasses(DataTranslate.byteToUnsignedShort(u2Arr));
+
+        log.info("\t\t\tInnerClasses: "
+                + ", table len: " + innerClassAttribute.getNumberOfClasses()
+        );
+
+        if (innerClassAttribute.getNumberOfClasses() != 0) {
+            innerClassAttribute.initClassesTable();
+
+            for (int i = 0; i < innerClassAttribute.getNumberOfClasses(); i++) {
+                InnerClassAttribute.Class aClass = new InnerClassAttribute.Class();
+
+                // inner_class_info_index  u2
+                Stream.readU2Simple(content, index, u2Arr);
+                index += 2;
+                aClass.setInnerClassInfoIndex(DataTranslate.byteToUnsignedShort(u2Arr));
+
+                // outer_class_info_index  u2
+                Stream.readU2Simple(content, index, u2Arr);
+                index += 2;
+                aClass.setOuterClassInfoIndex(DataTranslate.byteToUnsignedShort(u2Arr));
+
+                // inner_name_index  u2
+                Stream.readU2Simple(content, index, u2Arr);
+                index += 2;
+                aClass.setInnerClassNameIndex(DataTranslate.byteToUnsignedShort(u2Arr));
+
+                // inner_class_access_flags
+                Stream.readU2Simple(content, index, u2Arr);
+                index += 2;
+                AccessFlags accessFlags = new AccessFlags(DataTranslate.byteToUnsignedShort(u2Arr));
+                aClass.setInnerClassAccessFlags(accessFlags);
+
+                innerClassAttribute.getClasses().add(aClass);
+            }
+        }
+
+        attributes.put(attributeName, innerClassAttribute);
+        return index;
+    }
+
+    /**
+     * 解析 BootstrapMethods 属性
+     * @param content 字节流
+     * @param index 当前解析索引
+     * @param attributeNameIndex    属性名在常量池中的索引
+     * @param attributeLength       属性长度(Byte)
+     * @param attributeName     属性名
+     * @param attributes        解析出来属性的存储容器
+     * @return 解析完成之后的当前解析索引
+     * */
+    private static int parseBootstrapMethods(byte[] content, int index, int attributeNameIndex, int attributeLength, String attributeName, Map<String, Attribute> attributes) {
+        // 中转字节数组，可复用
+        byte[] u2Arr = new byte[2];
+
+        BootstrapMethods bootstrapMethods = new BootstrapMethods();
+        StackMapTableAttribute stackMapTableAttribute = new StackMapTableAttribute();
+        stackMapTableAttribute.setAttributeNameIndex(attributeNameIndex);
+        stackMapTableAttribute.setAttributeLength(attributeLength);
+
+        //  numberOfBootstrapMethods   u2
+        Stream.readU2Simple(content, index, u2Arr);
+        index += 2;
+        bootstrapMethods.setNumberOfBootstrapMethods(DataTranslate.byteToUnsignedShort(u2Arr));
+
+        log.info("\t\t\tBootstrapMethods: "
+                + ", table len: " + bootstrapMethods.getNumberOfBootstrapMethods()
+        );
+
+        if (bootstrapMethods.getNumberOfBootstrapMethods() != 0) {
+            bootstrapMethods.initBootstrapMethodTable();
+
+            for (int i = 0; i < bootstrapMethods.getNumberOfBootstrapMethods(); i++) {
+                BootstrapMethods.BootstrapMethod bootstrapMethod = new BootstrapMethods.BootstrapMethod();
+
+                // bootstrap_method_ref  u2
+                Stream.readU2Simple(content, index, u2Arr);
+                index += 2;
+                bootstrapMethod.setBootstrapMethodRef(DataTranslate.byteToUnsignedShort(u2Arr));
+
+                // num_bootstrap_arguments  u2
+                Stream.readU2Simple(content, index, u2Arr);
+                index += 2;
+                bootstrapMethod.setNumOfBootstrapArguments(DataTranslate.byteToUnsignedShort(u2Arr));
+
+                log.info("\t\t\t\tBootstrapMethodArguments: "
+                        + ", table len: " + bootstrapMethod.getNumOfBootstrapArguments()
+                );
+
+                if (bootstrapMethod.getNumOfBootstrapArguments() != 0) {
+                    bootstrapMethod.initBootstrapArguments();
+
+                    for (int j = 0; j < bootstrapMethod.getNumOfBootstrapArguments(); j ++) {
+                        // bootstrap_argument  u2
+                        Stream.readU2Simple(content, index, u2Arr);
+                        index += 2;
+
+                        bootstrapMethod.getBootstrapArguments().add(DataTranslate.byteToUnsignedShort(u2Arr));
+                    }
+                }
+
+                bootstrapMethods.getBootstrapMethods().add(bootstrapMethod);
+            }
+        }
+
+        attributes.put(attributeName, bootstrapMethods);
         return index;
     }
 
@@ -768,11 +907,114 @@ public class ClassFileParser {
                     index = parseJvmConstantNameAndType(content, klass, index, i);
                     break;
                 }
+                case ConstantPool.JVM_CONSTANT_InvokeDynamic: {
+                    index = parseJvmConstantInvokeDynamic(content, klass, index, i);
+                    break;
+                }
+                case ConstantPool.JVM_CONSTANT_MethodType: {
+                    index = parseJvmConstantMethodType(content, klass, index, i);
+                    break;
+                }
+                case ConstantPool.JVM_CONSTANT_MethodHandle: {
+                    index = parseJvmConstantMethodHandle(content, klass, index, i);
+                    break;
+                }
                 default:
                     throw new Error("无法识别的常量池项: " + tag);
             }
         }
 
+        return index;
+    }
+
+    /**
+     * 解析常量池 JVM_CONSTANT_MethodType 结构
+     * @param content 字节流
+     * @param klass 解析成的instanceKlass实例
+     * @param index 当前解析索引
+     * @param constantPoolIndex 该结构在常量池中的索引
+     * @return 解析完成之后的当前解析索引
+     * */
+    private static int parseJvmConstantMethodType(byte[] content, InstanceKlass klass, int index, int constantPoolIndex) {
+        // 中转字节数组，可复用
+        byte[] u2Arr = new byte[2];
+
+        // 将 index-->tag 的映射关系写入常量池
+        klass.getConstantPool().getTag()[constantPoolIndex] = ConstantPool.JVM_CONSTANT_MethodType;
+
+        // descriptor_index
+        Stream.readU2Simple(content, index, u2Arr);
+        index += 2;
+        int descriptorIndex = DataTranslate.byteToUnsignedShort(u2Arr);
+
+        // 将解析出来的内容存到ConstantPool中
+        klass.getConstantPool().getDataMap().put(constantPoolIndex, descriptorIndex);
+
+        log.info("\t第 " + constantPoolIndex + " 个: 类型: MethodType，值: " + klass.getConstantPool().getDataMap().get(constantPoolIndex));
+        return index;
+    }
+
+    /**
+     * 解析常量池 JVM_CONSTANT_MethodHandle 结构
+     * @param content 字节流
+     * @param klass 解析成的instanceKlass实例
+     * @param index 当前解析索引
+     * @param constantPoolIndex 该结构在常量池中的索引
+     * @return 解析完成之后的当前解析索引
+     * */
+    private static int parseJvmConstantMethodHandle(byte[] content, InstanceKlass klass, int index, int constantPoolIndex) {
+        // 中转字节数组，可复用
+        byte[] u2Arr = new byte[2];
+
+        // 将 index-->tag 的映射关系写入常量池
+        klass.getConstantPool().getTag()[constantPoolIndex] = ConstantPool.JVM_CONSTANT_MethodHandle;
+
+        int referenceKind = Stream.readU1Simple(content, index);
+        index += 1;
+
+        // reference_index
+        Stream.readU2Simple(content, index, u2Arr);
+        index += 2;
+        int referenceIndex = DataTranslate.byteToUnsignedShort(u2Arr);
+
+        // 将解析出来的内容存到ConstantPool中
+        // 将referenceKind(u1)与referenceIndex(u2)拼成一个int(u4)，前十六位是referenceKind，后十六位是referenceIndex
+        klass.getConstantPool().getDataMap().put(constantPoolIndex, referenceKind << 16 | referenceIndex);
+
+        log.info("\t第 " + constantPoolIndex + " 个: 类型: MethodHandle，值: 0x" + Integer.toHexString((int) klass.getConstantPool().getDataMap().get(constantPoolIndex)));
+        return index;
+    }
+
+    /**
+     * 解析常量池 JVM_CONSTANT_InvokeDynamic 结构
+     * @param content 字节流
+     * @param klass 解析成的instanceKlass实例
+     * @param index 当前解析索引
+     * @param constantPoolIndex 该结构在常量池中的索引
+     * @return 解析完成之后的当前解析索引
+     * */
+    private static int parseJvmConstantInvokeDynamic(byte[] content, InstanceKlass klass, int index, int constantPoolIndex) {
+        // 中转字节数组，可复用
+        byte[] u2Arr = new byte[2];
+
+        // 将 index-->tag 的映射关系写入常量池
+        klass.getConstantPool().getTag()[constantPoolIndex] = ConstantPool.JVM_CONSTANT_InvokeDynamic;
+
+        // bootstrap_method_attr_index
+        Stream.readU2Simple(content, index, u2Arr);
+        index += 2;
+        int bootstrapMethodAttrIndex = DataTranslate.byteToUnsignedShort(u2Arr);
+
+        // name_and_type_index
+        Stream.readU2Simple(content, index, u2Arr);
+        index += 2;
+        int nameAndTypeIndex = DataTranslate.byteToUnsignedShort(u2Arr);
+
+        // 将解析出来的内容存到ConstantPool中
+        // 将bootstrapMethodAttrIndex(u2)与nameAndTypeIndex(u2)拼成一个int(u4)，前十六位是bootstrapMethodAttrIndex，后十六位是nameAndTypeIndex
+        klass.getConstantPool().getDataMap().put(constantPoolIndex, bootstrapMethodAttrIndex << 16 | nameAndTypeIndex);
+
+        log.info("\t第 " + constantPoolIndex + " 个: 类型: InvokeDynamic，值: 0x" + Integer.toHexString((int) klass.getConstantPool().getDataMap().get(constantPoolIndex)));
         return index;
     }
 
