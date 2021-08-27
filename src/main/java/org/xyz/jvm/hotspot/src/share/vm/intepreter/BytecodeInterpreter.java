@@ -6229,11 +6229,11 @@ public class BytecodeInterpreter {
 
         // 从操作数栈中弹出 被调方法所属类的对象，即this指针
         // 从操作数栈中弹出的对象是invokedymaic指令执行完之后，经过封装的代理对象(TestLambda$$Lambda$1类的对象，该类是经过代理生成的，它中也有run方法)，
-        //      而不是原始对象(rg/xyz/jvm/example/lambda/CustomLambda)，如果直接去代理对象中获取相应的run方法，获取的是错误的方法
+        //      而不是原始对象(rg/xyz/jvm/example/lambda/CustomLambda)。如果直接去代理对象中获取相应的run方法，获取的是错误的方法
         Object obj = frame.getOperandStack().pop().getData();
 
         try {
-            // invokeinterface指令的操作数是原始对象的索引(InterfaceMethodref_info)，
+            // invokeinterface指令的操作数是所调用的接口方法在常量池中的索引(InterfaceMethodref_info)，通过接口方法，可以获取其所属的类的Class对象
             //      所以要从指令操作数对应的原始对象中获取相应的method(org/xyz/jvm/example/lambda/CustomLambda.run)，然后使用代理对象去调用
             // 原始对象信息: <org/xyz/jvm/example/lambda/CustomLambda.run : (II)V>
             Class<?> clazz = Class.forName(className.replace("/", "."));
