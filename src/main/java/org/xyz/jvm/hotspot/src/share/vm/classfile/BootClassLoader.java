@@ -19,7 +19,7 @@ public class BootClassLoader {
     public static final String SUFFIX = ".class";
 
     // 该类加载器的加载路径，多个路径以分号分隔，只有一个的话，分号可省略。注意路径后面的斜杠不可丢
-    private static String searchPath = "C:\\Users\\小宇子\\Desktop\\jvm\\target\\classes\\";
+    private static String searchPath = "/Users/hongyujiao/Desktop/jvm/jvm/target/classes/";
 
     // 缓存该类加载器加载的所有类
     private static Map<String, InstanceKlass> classLoaderData = new HashMap<>();
