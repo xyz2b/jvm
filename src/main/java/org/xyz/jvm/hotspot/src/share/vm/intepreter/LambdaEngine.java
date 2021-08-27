@@ -70,7 +70,9 @@ public class LambdaEngine {
             // 获取被调用方法的返回值的MethodType
             MethodType factorType = MethodType.methodType(returnClazz);
 
-            // 这个调用的方法，就是在 BootstrapMethods 属性中的 Bootstrap方法，传入的参数也包含 BootstrapMethods属性中的参数
+            // 这个调用的方法，就是在 BootstrapMethods 属性中的 Bootstrap方法，上面的代码都是在构造这个方法的入参，传入的部分参数在 BootstrapMethods 属性中也有体现
+            //      JVM本身也是通过这种方式实现的lambda表达式，通过调用LambdaMetafactory.metafactory，传入指定的参数，然后构造出invokedymaic指令的返回值类型对象，并返回该对象
+            //      invokedymaic指令的返回值类型是个接口，所以构造出来的对象是实现了该接口的类的对象，这个类的生成是在内存中动态生成的，即下面注释代码中的类 TestLambda$$Lambda$1，它实现了 CustomLambda 接口
             // lookup: 调用者org/xyz/jvm/example/lambda/TestLambda的lookup
             // sourceMethodName: run
             // factorType: invokedymaic指令的返回值类型 org/xyz/jvm/example/lambda/CustomLambda 的 MethodType
@@ -81,6 +83,7 @@ public class LambdaEngine {
             // 这里的MethodHandle就是下面生成的类中构造方法
             MethodHandle target = callSite.getTarget();
 
+            // 调用下面生成的类的构造方法，然后就构造出来了invokedymaic指令的返回值类型对象，返回即可
             return target.invoke();
             /*
             * 最后生成的类
