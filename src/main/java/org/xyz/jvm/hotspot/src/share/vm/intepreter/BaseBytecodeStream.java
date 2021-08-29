@@ -95,6 +95,7 @@ public class BaseBytecodeStream extends StackObj {
 
     /**
      * 设置字节流读取索引(程序计数器)
+     * 用在try...catch...上，用于跳转到catch中指令的起始位置
      * @param index 字节流的读取索引(程序计数器)
      * */
     public void setIndex(int index) {
