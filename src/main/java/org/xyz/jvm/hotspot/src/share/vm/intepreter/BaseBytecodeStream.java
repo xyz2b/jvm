@@ -91,4 +91,13 @@ public class BaseBytecodeStream extends StackObj {
     public void inc(int step) {
         index +=  step;
     }
+
+
+    /**
+     * 设置字节流读取索引(程序计数器)
+     * @param index 字节流的读取索引(程序计数器)
+     * */
+    public void setIndex(int index) {
+        this.index = index;
+    }
 }
