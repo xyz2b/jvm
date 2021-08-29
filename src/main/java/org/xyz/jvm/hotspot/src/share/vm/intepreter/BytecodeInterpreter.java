@@ -6228,7 +6228,7 @@ public class BytecodeInterpreter {
         Object[] params = descriptorStream.getParamsVal(frame);
 
         // 从操作数栈中弹出 被调方法所属类的对象，即this指针
-        // 从操作数栈中弹出的对象是invokedymaic指令执行完之后，经过封装的代理对象(TestLambda$$Lambda$1类的对象，该类是在内存中动态生成的，它实现了对应的接口，所以其中也有run方法)，
+        // 从操作数栈中弹出的对象是invokedymaic指令执行完之后，经过封装的代理对象(TestLambda$$Lambda$1类的对象，该类是在内存中动态生成的，它实现了CustomLambda接口，所以其中也有run方法)，
         //      而不是invokeinterface指令调用的接口方法所属的原始对象(rg/xyz/jvm/example/lambda/CustomLambda)。如果直接去代理对象中获取相应的run方法，获取的是错误的方法
         Object obj = frame.getOperandStack().pop().getData();
 
