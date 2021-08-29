@@ -16,6 +16,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 字节码解释器
@@ -982,10 +983,47 @@ public class BytecodeInterpreter {
                     sAStore(currentThread, code);
                     break;
                 }
+                case ByteCodes.ATHROW: {
+                    log.info("执行指令: athrow，该指令功能为: 抛出异常");
+                    aThrow(currentThread, code);
+                    break;
+                }
                 default:
                     throw new Error("暂不支持该指令: " + opcode);
             }
         }
+    }
+
+    /**
+     * 执行athrow字节码指令
+     * 该指令功能为: 调用动态方法
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void aThrow(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 方法信息
+        MethodInfo method = code.getBelongMethod();
+
+        // 从操作数栈中弹出栈顶元素（value）
+        StackValue value = stack.peek();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_OBJECT) {
+            log.error("athrow字节码指令: value 不匹配的数据类型: " + value.getType());
+            throw new Error("athrow字节码指令: value 不匹配的数据类型" + value.getType());
+        }
+        Throwable throwable = (Throwable) stack.pop().getData();
+
+        try {
+            throw throwable;
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        System.exit(-1);
     }
 
     /**
@@ -3717,6 +3755,8 @@ public class BytecodeInterpreter {
         JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
         // 操作数栈
         StackValueCollection stack = frame.getOperandStack();
+        // 运行时常量池（运行时常量池就是 klass）
+        ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
 
         // 取出栈顶元素
         StackValue value2 = stack.pop();
@@ -3726,6 +3766,37 @@ public class BytecodeInterpreter {
         if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
             log.error("idiv字节码指令: 不匹配的数据类型");
             throw new Error("idiv字节码指令: 不匹配的数据类型");
+        }
+
+        // 判断是不是除0
+        if (0 == (int) value2.getData()) {
+            CodeAttribute.ExceptionHandler e = code.getBelongCode().findExceptionHandle(code.current());
+
+            if (null != e) {
+                String className = constantPool.getClassName(e.getCatchType());
+
+                try {
+                    Class<?> clazz = Class.forName(className.replace("/", "."));
+                    Constructor constructor = clazz.getConstructor(String.class);
+
+                    Object o = constructor.newInstance("/ by zero");
+
+                    stack.push(new StackValue(BasicType.T_OBJECT, o));
+
+                    code.setIndex(e.getHandlerPc());
+
+                } catch (ClassNotFoundException | NoSuchMethodException ex) {
+                    ex.printStackTrace();
+                } catch (IllegalAccessException ex) {
+                    ex.printStackTrace();
+                } catch (InstantiationException ex) {
+                    ex.printStackTrace();
+                } catch (InvocationTargetException ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                throw new ArithmeticException("/ by zero");
+            }
         }
 
         // 运算

@@ -101,4 +101,12 @@ public class BaseBytecodeStream extends StackObj {
     public void setIndex(int index) {
         this.index = index;
     }
+
+    /**
+     * 获取当前程序计数器的值
+     * @return 当前程序计数器的值
+     * */
+    public int current() {
+        return index;
+    }
 }
