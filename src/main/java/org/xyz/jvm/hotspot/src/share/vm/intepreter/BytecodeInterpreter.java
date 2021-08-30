@@ -3785,6 +3785,8 @@ public class BytecodeInterpreter {
 
                     code.setIndex(e.getHandlerPc());
 
+                    return;
+
                 } catch (ClassNotFoundException | NoSuchMethodException ex) {
                     ex.printStackTrace();
                 } catch (IllegalAccessException ex) {
@@ -6244,11 +6246,7 @@ public class BytecodeInterpreter {
             Constructor<?> constructor = clazz.getConstructor();
             Object object = constructor.newInstance();
 
-            if (object instanceof Throwable) {
-                frame.getOperandStack().push(new StackValue(BasicType.T_Throwable, object));
-            } else {
-                frame.getOperandStack().push(new StackValue(BasicType.T_OBJECT, object));
-            }
+            frame.getOperandStack().push(new StackValue(BasicType.T_OBJECT, object));
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {

@@ -6,7 +6,7 @@ import lombok.Data;
 public class Attribute {
     public static final String JVM_ATTRIBUTE_ConstantValue = "ConstantValue";
     public static final String JVM_ATTRIBUTE_Code = "Code";
-    public static final String JVM_ATTRIBUTE_Exception = "Exception";
+    public static final String JVM_ATTRIBUTE_Exceptions = "Exceptions";
     public static final String JVM_ATTRIBUTE_LineNumberTable = "LineNumberTable";
     public static final String JVM_ATTRIBUTE_LocalVariableTable = "LocalVariableTable";
     public static final String JVM_ATTRIBUTE_SourceFile = "SourceFile";

@@ -14,7 +14,7 @@ public class Main {
 
     public static void startJvm() {
         // 通过BootClassLoader加载main函数所在的类
-        InstanceKlass klass = BootClassLoader.loadMainClass("org.xyz.jvm.example.lambda.TestLambda");
+        InstanceKlass klass = BootClassLoader.loadMainClass("org.xyz.jvm.example.exception.ExceptionHappen");
 
         // 找到main方法
         MethodInfo main = JavaNativeInterface.getMethod(klass, "main", "([Ljava/lang/String;)V");

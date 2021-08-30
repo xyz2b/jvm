@@ -277,7 +277,7 @@ public class ClassFileParser {
                     index = parseCodeAttribute(content, index, attributeNameIndex, attributeLength, attributeName, attributes, klass, methodInfo);
                     break;
                 }
-                case JVM_ATTRIBUTE_Exception: {
+                case JVM_ATTRIBUTE_Exceptions: {
                     index = parseExceptionAttribute(content, index, attributeNameIndex, attributeLength, attributeName, attributes);
                     break;
                 }
@@ -462,7 +462,7 @@ public class ClassFileParser {
         // 直接跳过后面的数据，不做解析
         index += stackMapTableAttribute.getAttributeLength();
 
-        log.info("\t\t\t stackMapTable: "
+        log.info("\t\t\t\t stackMapTable: "
                 + ", name index: " + stackMapTableAttribute.getAttributeNameIndex()
                 + ", attr len: " + stackMapTableAttribute.getAttributeLength()
         );
@@ -523,7 +523,7 @@ public class ClassFileParser {
         index += 2;
         localVariableTableAttribute.setLocalVariableTableLength(DataTranslate.byteToUnsignedShort(u2Arr));
 
-        log.info("\t\t\tLocalVariableTable: "
+        log.info("\t\t\t\tLocalVariableTable: "
                 + ", table len: " + localVariableTableAttribute.getLocalVariableTableLength()
         );
 
@@ -560,7 +560,7 @@ public class ClassFileParser {
 
                 localVariableTableAttribute.getLocalVariableTable().add(localVariable);
 
-                log.info("\t\t\t\tLocalVariable: "
+                log.info("\t\t\t\t\tLocalVariable: "
                         + ", start pc: " + localVariable.getStartPc()
                         + ", length: " + localVariable.getLength()
                         + ", name index: " + localVariable.getNameIndex()
@@ -597,7 +597,7 @@ public class ClassFileParser {
         index += 2;
         lineNumberTableAttribute.setLineNumberTableLength(DataTranslate.byteToUnsignedShort(u2Arr));
 
-        log.info("\t\t\tlineNumberTable: "
+        log.info("\t\t\t\tlineNumberTable: "
                 + ", table len: " + lineNumberTableAttribute.getLineNumberTableLength()
         );
 
@@ -619,7 +619,7 @@ public class ClassFileParser {
 
                 lineNumberTableAttribute.getLineNumberTables().add(lineNumber);
 
-                log.info("\t\t\t\tlineNumber: "
+                log.info("\t\t\t\t\tlineNumber: "
                         + ", start pc: " + lineNumber.getStartPc()
                         + ", line number: " + lineNumber.getLineNumber()
                 );
@@ -651,7 +651,7 @@ public class ClassFileParser {
         // numberOfExceptions  u2
         Stream.readU2Simple(content, index, u2Arr);
         index += 2;
-        exceptionAttribute.setNumberOfExceptions(DataTranslate.byteToInt(u2Arr));
+        exceptionAttribute.setNumberOfExceptions(DataTranslate.byteToUnsignedShort(u2Arr));
 
         log.info("\t\t\tException: "
                 + ", table len: " + exceptionAttribute.getNumberOfExceptions()
