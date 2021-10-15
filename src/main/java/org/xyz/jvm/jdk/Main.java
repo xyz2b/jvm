@@ -6,10 +6,20 @@ import org.xyz.jvm.hotspot.src.share.vm.runtime.Threads;
 import org.xyz.jvm.hotspot.src.share.vm.classfile.BootClassLoader;
 import org.xyz.jvm.hotspot.src.share.vm.oops.InstanceKlass;
 import org.xyz.jvm.hotspot.src.share.vm.oops.MethodInfo;
+import org.xyz.jvm.jdk.classes.sun.misc.Unsafe;
 
 public class Main {
     public static void main(String[] args) {
         startJvm();
+
+//        System.out.println(System.getProperty("java.library.path"));
+//        System.loadLibrary("jni");
+//
+//        org.xyz.jvm.jdk.Threads.createVm();
+//
+//        System.out.println(Unsafe.allocateMemory(80));
+//
+//        System.out.println(Unsafe.allocateMemory(16));
     }
 
     public static void startJvm() {
