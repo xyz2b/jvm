@@ -10,17 +10,17 @@ import org.xyz.jvm.jdk.classes.sun.misc.Unsafe;
 
 public class Main {
     public static void main(String[] args) {
-        startJvm();
+//        startJvm();
 
 //        System.out.println(System.getProperty("java.library.path"));
-//        System.loadLibrary("jni");
-//
-//        org.xyz.jvm.jdk.Threads.createVm();
-//
-//        System.out.println(Unsafe.allocateMemory(80));
-//
-//        System.out.println(Unsafe.allocateMemory(16));
-    }
+        System.loadLibrary("jni");
+
+        org.xyz.jvm.jdk.Threads.createVm();
+
+        System.out.println(Unsafe.allocateMemory(80));
+
+        System.out.println(Unsafe.allocateMemory(16));
+}
 
     public static void startJvm() {
         // 通过BootClassLoader加载main函数所在的类
