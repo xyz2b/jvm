@@ -16,6 +16,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 字节码解释器
@@ -125,6 +126,11 @@ public class BytecodeInterpreter {
                 case ByteCodes.INVOKEINTERFACE: {
                     log.info("执行指令: invokeinterface，该指令功能为: 调用接口方法");
                     invokeInterface(currentThread, code);
+                    break;
+                }
+                case ByteCodes.INVOKEDYNAMIC: {
+                    log.info("执行指令: invokedynamic，该指令功能为: 调用动态方法");
+                    invokeDynamic(currentThread, code);
                     break;
                 }
                 case ByteCodes.BIPUSH: {
@@ -977,11 +983,76 @@ public class BytecodeInterpreter {
                     sAStore(currentThread, code);
                     break;
                 }
+                case ByteCodes.ATHROW: {
+                    log.info("执行指令: athrow，该指令功能为: 抛出异常");
+                    aThrow(currentThread, code);
+                    break;
+                }
                 default:
                     throw new Error("暂不支持该指令: " + opcode);
             }
         }
     }
+
+    /**
+     * 执行athrow字节码指令
+     * 该指令功能为: 调用动态方法
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void aThrow(JavaThread currentThread, ByteCodeStream code) {
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 方法信息
+        MethodInfo method = code.getBelongMethod();
+
+        // 从操作数栈中弹出栈顶元素（value）
+        StackValue value = stack.peek();
+        // 检查操作数类型
+        if (value.getType() != BasicType.T_OBJECT) {
+            log.error("athrow字节码指令: value 不匹配的数据类型: " + value.getType());
+            throw new Error("athrow字节码指令: value 不匹配的数据类型" + value.getType());
+        }
+        Throwable throwable = (Throwable) stack.pop().getData();
+
+        try {
+            throw throwable;
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        System.exit(-1);
+    }
+
+    /**
+     * 执行invokedymaic字节码指令
+     * 该指令功能为: 调用动态方法
+     * @param currentThread 当前线程
+     * @param code 当前方法的指令段
+     * */
+    private static void invokeDynamic(JavaThread currentThread, ByteCodeStream code) {
+        // TODO: invokeDynamic字节码执行执行
+        // 获取栈帧
+        JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
+        // 操作数栈
+        StackValueCollection stack = frame.getOperandStack();
+        // 方法信息
+        MethodInfo method = code.getBelongMethod();
+
+        int code1 = code.getU1Code();
+        int code2 = code.getU1Code();
+        int code3 = code.getU1Code();
+        int code4 = code.getU1Code();
+
+        int index = code1 << 8 | code2;
+
+        Object object = new LambdaEngine(method, index).createObject();
+
+        stack.push(new StackValue(BasicType.T_OBJECT, object));
+    }
+
 
     /**
      * 执行sastore字节码指令
@@ -3684,6 +3755,8 @@ public class BytecodeInterpreter {
         JavaVFrame frame = (JavaVFrame) currentThread.getStack().peek();
         // 操作数栈
         StackValueCollection stack = frame.getOperandStack();
+        // 运行时常量池（运行时常量池就是 klass）
+        ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
 
         // 取出栈顶元素
         StackValue value2 = stack.pop();
@@ -3693,6 +3766,39 @@ public class BytecodeInterpreter {
         if (value1.getType() != BasicType.T_INT || value2.getType() != BasicType.T_INT) {
             log.error("idiv字节码指令: 不匹配的数据类型");
             throw new Error("idiv字节码指令: 不匹配的数据类型");
+        }
+
+        // 判断是不是除0
+        if (0 == (int) value2.getData()) {
+            CodeAttribute.ExceptionHandler e = code.getBelongCode().findExceptionHandle(code.current());
+
+            if (null != e) {
+                String className = constantPool.getClassName(e.getCatchType());
+
+                try {
+                    Class<?> clazz = Class.forName(className.replace("/", "."));
+                    Constructor constructor = clazz.getConstructor(String.class);
+
+                    Object o = constructor.newInstance("/ by zero");
+
+                    stack.push(new StackValue(BasicType.T_OBJECT, o));
+
+                    code.setIndex(e.getHandlerPc());
+
+                    return;
+
+                } catch (ClassNotFoundException | NoSuchMethodException ex) {
+                    ex.printStackTrace();
+                } catch (IllegalAccessException ex) {
+                    ex.printStackTrace();
+                } catch (InstantiationException ex) {
+                    ex.printStackTrace();
+                } catch (InvocationTargetException ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                throw new ArithmeticException("/ by zero");
+            }
         }
 
         // 运算
@@ -6140,11 +6246,7 @@ public class BytecodeInterpreter {
             Constructor<?> constructor = clazz.getConstructor();
             Object object = constructor.newInstance();
 
-            if (object instanceof Throwable) {
-                frame.getOperandStack().push(new StackValue(BasicType.T_Throwable, object));
-            } else {
-                frame.getOperandStack().push(new StackValue(BasicType.T_OBJECT, object));
-            }
+            frame.getOperandStack().push(new StackValue(BasicType.T_OBJECT, object));
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
@@ -6172,10 +6274,14 @@ public class BytecodeInterpreter {
         StackValueCollection stack = frame.getOperandStack();
         // 运行时常量池（运行时常量池就是 klass）
         ConstantPool constantPool = code.getBelongMethod().getBelongKlass().getConstantPool();
-        // 取出操作数，invokevirtual指令的操作数是常量池的索引（Methodref），占两个字节
+        // 取出操作数，invokeinterface指令的操作数是常量池的索引（InterfaceMethodref），占两个字节
         int operand = code.getUnsignedShort();
 
-        String className = constantPool.getClassNameByFieldInfo(operand).replace('/', '.');
+        // 多余的两个字节的操作数，不知道什么用处
+        code.getU1Code();
+        code.getU1Code();
+
+        String className = constantPool.getClassNameByMethodInfo(operand).replace('/', '.');
         String methodName = constantPool.getMethodName(operand);
         String descriptorName = constantPool.getFieldDescriptor(operand);
 
@@ -6191,10 +6297,17 @@ public class BytecodeInterpreter {
         Object[] params = descriptorStream.getParamsVal(frame);
 
         // 从操作数栈中弹出 被调方法所属类的对象，即this指针
+        // 从操作数栈中弹出的对象是invokedymaic指令执行完之后，经过封装的代理对象(TestLambda$$Lambda$1类的对象，该类是在内存中动态生成的，它实现了CustomLambda接口，所以其中也有run方法)，
+        //      而不是invokeinterface指令调用的接口方法所属的原始对象(rg/xyz/jvm/example/lambda/CustomLambda)。如果直接去代理对象中获取相应的run方法，获取的是错误的方法
         Object obj = frame.getOperandStack().pop().getData();
 
         try {
-            Method fun = obj.getClass().getMethod(methodName, paramsClass);
+            // invokeinterface指令的操作数是所调用的接口方法在常量池中的索引(InterfaceMethodref_info)，通过接口方法，可以获取其所属的类的Class对象
+            //      所以要从指令操作数对应的原始对象中获取相应的method(org/xyz/jvm/example/lambda/CustomLambda.run)，因为invokeinterface调用的就是原始对象(接口类型)中的方法(通过在指令操作数中指定)
+            //      然后使用代理对象去调用
+            // 指令操作数指定的接口方法的信息: <org/xyz/jvm/example/lambda/CustomLambda.run : (II)V>
+            Class<?> clazz = Class.forName(className.replace("/", "."));
+            Method fun = clazz.getMethod(methodName, paramsClass);
 
             /**
              * 处理：
@@ -6206,7 +6319,7 @@ public class BytecodeInterpreter {
             } else {
                 descriptorStream.pushReturnElement(fun.invoke(obj, params), frame);
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

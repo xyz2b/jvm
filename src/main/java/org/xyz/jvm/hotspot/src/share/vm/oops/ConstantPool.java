@@ -128,6 +128,140 @@ public class ConstantPool {
     }
 
     /**
+     * JVM_CONSTANT_MethodType_info: descriptor_index
+     * @param index MethodType 结构在常量池中的索引
+     * @return MethodType 结构中 descriptor_index 字段对应的方法描述符
+     * */
+    public String getMethodDescriptorByMethodTypeInfo(int index) {
+        if (!checkIndex(index)) return null;
+
+        // 获取 MethodType 在常量池中的信息(descriptor_index)
+        int descriptor_index = (int) dataMap.get(index);
+
+        return getUtf8(descriptor_index);
+    }
+
+    /**
+     * JVM_CONSTANT_MethodHandle_info: reference_kind + reference_index
+     * @param index MethodHandle 结构在常量池中的索引
+     * @return MethodHandle 结构中 reference_kind 字段的索引值
+     * */
+    public int getReferenceKind(int index) {
+        if (!checkIndex(index)) return -1;
+
+        // 获取 MethodHandle 在常量池中的信息(reference_kind + reference_index)
+        int data = (int) dataMap.get(index);
+
+        // 获取 reference_kind，int的前2个字节
+        int referenceKind = data >> 16;
+
+        return referenceKind;
+    }
+
+    /**
+     * JVM_CONSTANT_MethodHandle_info: reference_kind + reference_index
+     * @param index MethodHandle 结构在常量池中的索引
+     * @return MethodHandle 结构中 reference_index 字段的对应的方法名称
+     * */
+    public String getMethodNameByMethodHandleInfo(int index) {
+        if (!checkIndex(index)) return null;
+
+        // 获取 MethodHandle 在常量池中的信息(reference_kind + reference_index)
+        int data = (int) dataMap.get(index);
+
+        // 获取 reference_index，int的后2个字节
+        int reference_index = data & 0xFF;
+
+        return getMethodName(reference_index);
+    }
+
+    /**
+     * JVM_CONSTANT_MethodHandle_info: reference_kind + reference_index
+     * @param index MethodHandle 结构在常量池中的索引
+     * @return MethodHandle 结构中 reference_index 字段的对应的方法描述符
+     * */
+    public String getMethodDescriptorByMethodHandleInfo(int index) {
+        if (!checkIndex(index)) return null;
+
+        // 获取 MethodHandle 在常量池中的信息(reference_kind + reference_index)
+        int data = (int) dataMap.get(index);
+
+        // 获取 reference_index，int的后2个字节
+        int reference_index = data & 0xFF;
+
+        return getMethodDescriptor(reference_index);
+    }
+
+    /**
+     * JVM_CONSTANT_MethodHandle_info: reference_kind + reference_index
+     * @param index MethodHandle 结构在常量池中的索引
+     * @return MethodHandle 结构中 reference_index 字段的对应的方法所属类名
+     * */
+    public String getMethodClassNameByMethodHandleInfo(int index) {
+        if (!checkIndex(index)) return null;
+
+        // 获取 MethodHandle 在常量池中的信息(reference_kind + reference_index)
+        int data = (int) dataMap.get(index);
+
+        // 获取 reference_index，int的后2个字节
+        int reference_index = data & 0xFF;
+
+        return getClassNameByMethodInfo(reference_index);
+    }
+
+    /**
+     * JVM_CONSTANT_InvokeDynamic_info: bootstrap_method_attr_index + name_and_type_index
+     * @param index InvokeDynamic 结构在常量池中的索引
+     * @return InvokeDynamic 结构中 BootstrapMethods 字段的索引值
+     * */
+    public int getBootstrapMethodIndexByInvokeDynamicInfo(int index) {
+        if (!checkIndex(index)) return -1;
+
+        // 获取 InvokeDynamic 在常量池中的信息(bootstrap_method_attr_index + name_and_type_index)
+        int data = (int) dataMap.get(index);
+
+        // 获取 bootstrap_method_attr_index，int的前2个字节
+        int bootstrapMethodAttrIndex = data >> 16;
+
+        return bootstrapMethodAttrIndex;
+    }
+
+    /**
+     * JVM_CONSTANT_InvokeDynamic_info: bootstrap_method_attr_index + name_and_type_index
+     * @param index InvokeDynamic 结构在常量池中的索引
+     * @return InvokeDynamic 结构中 NameAndType 对应的方法的名称
+     * */
+    public String getMethodNameByInvokeDynamicInfo(int index) {
+        if (!checkIndex(index)) return null;
+
+        // 获取 InvokeDynamic 在常量池中的信息(bootstrap_method_attr_index + name_and_type_index)
+        int data = (int) dataMap.get(index);
+
+        // 获取 name_and_type_index，int的后2个字节
+        int nameAndTypeIndex = data & 0xFF;
+
+        return getName(nameAndTypeIndex);
+    }
+
+    /**
+     * JVM_CONSTANT_InvokeDynamic_info: bootstrap_method_attr_index + name_and_type_index
+     * @param index InvokeDynamic 结构在常量池中的索引
+     * @return InvokeDynamic 结构中 NameAndType 对应的方法描述符
+     * */
+    public String getMethodDescriptorByInvokeDynamicInfo(int index) {
+        if (!checkIndex(index)) return null;
+
+        // 获取 InvokeDynamic 在常量池中的信息(bootstrap_method_attr_index + name_and_type_index)
+        int data = (int) dataMap.get(index);
+
+        // 获取 name_and_type_index，int的后2个字节
+        int nameAndTypeIndex = data & 0xFF;
+
+        return getDescriptor(nameAndTypeIndex);
+    }
+
+
+    /**
      * CONSTANT_NameAndType_info: name_index + descriptor_index
      * @param index NameAndType 结构在常量池中的索引
      * @return NameAndType 字段中 name 字段的值

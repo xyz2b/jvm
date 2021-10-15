@@ -43,6 +43,19 @@ public class CodeAttribute extends Attribute {
         attributes = new HashMap<>(attributesCount);
     }
 
+    // 获取异常处理handle
+    public CodeAttribute.ExceptionHandler findExceptionHandle(int codeIndex) {
+        if (exceptionTableLength == 0) {
+            return null;
+        }
+        for (CodeAttribute.ExceptionHandler e : exceptionTables) {
+            if (codeIndex >= e.startPc && codeIndex <= e.endPc) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     /**
      * 异常处理器
      * */

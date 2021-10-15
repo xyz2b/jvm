@@ -1,13 +1,11 @@
 package org.xyz.jvm.example;
 
-public class HelloWorld implements Test {
-    public final static int i = 1;
-    public static void main(String[] args) throws IndexOutOfBoundsException {
-        try {
-            System.out.println("Hello World");
-        } catch (Exception e) {
-            e.printStackTrace();
+
+public class HelloWorld {
+    public static int i = 1;
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("HelloWorld");
         }
-//        System.out.println(System.getProperty("java.library.path"));
     }
 }

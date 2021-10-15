@@ -1,7 +1,6 @@
 package org.xyz.jvm.hotspot.src.share.tools;
 
-import java.util.Arrays;
-
+// JVM 默认大端字节序，即高位存储在低地址，低位存储在高地址
 public class DataTranslate {
     /**
      * 将u2字节数组(大端字节序)转成UnsignedShort数值(short正好占两个字节)

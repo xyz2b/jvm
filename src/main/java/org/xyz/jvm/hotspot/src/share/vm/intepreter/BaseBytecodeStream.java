@@ -91,4 +91,22 @@ public class BaseBytecodeStream extends StackObj {
     public void inc(int step) {
         index +=  step;
     }
+
+
+    /**
+     * 设置字节流读取索引(程序计数器)
+     * 用在try...catch...上，用于跳转到catch中指令的起始位置
+     * @param index 字节流的读取索引(程序计数器)
+     * */
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    /**
+     * 获取当前程序计数器的值
+     * @return 当前程序计数器的值
+     * */
+    public int current() {
+        return index;
+    }
 }
