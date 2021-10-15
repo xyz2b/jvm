@@ -1,4 +1,4 @@
-package org.xyz.jvm.jdk;
+package org.xyz.jvm.jdk.classes;
 
 import lombok.Data;
 
