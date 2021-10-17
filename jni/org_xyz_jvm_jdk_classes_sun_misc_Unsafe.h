@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT jlong JNICALL Java_org_xyz_jvm_jdk_classes_sun_misc_Unsafe_allocateMemory
   (JNIEnv *, jclass, jlong);
 
+/*
+ * Class:     org_xyz_jvm_jdk_classes_sun_misc_Unsafe
+ * Method:    allocateObject
+ * Signature: ()Lorg/xyz/jvm/jdk/classes/Handle;
+ */
+JNIEXPORT jobject JNICALL Java_org_xyz_jvm_jdk_classes_sun_misc_Unsafe_allocateObject
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

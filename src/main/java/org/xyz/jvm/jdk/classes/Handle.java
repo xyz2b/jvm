@@ -1,8 +1,5 @@
 package org.xyz.jvm.jdk.classes;
 
-import lombok.Data;
-
-@Data
 final public class Handle {
     // 申请的内存地址
     private long p;
