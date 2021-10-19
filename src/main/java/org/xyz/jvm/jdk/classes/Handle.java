@@ -1,7 +1,10 @@
 package org.xyz.jvm.jdk.classes;
 
+import lombok.Data;
+
+@Data
 final public class Handle {
-    // 申请的内存地址
+    // oop/klass的内存地址
     private long p;
 
     // 这块内存所存储的数据类型
