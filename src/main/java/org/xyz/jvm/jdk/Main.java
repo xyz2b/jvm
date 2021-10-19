@@ -1,11 +1,13 @@
 package org.xyz.jvm.jdk;
 
+import org.xyz.jvm.hotspot.src.share.vm.classfile.AppClassLoader;
 import org.xyz.jvm.hotspot.src.share.vm.prims.JavaNativeInterface;
 import org.xyz.jvm.hotspot.src.share.vm.runtime.JavaThread;
 import org.xyz.jvm.hotspot.src.share.vm.runtime.Threads;
 import org.xyz.jvm.hotspot.src.share.vm.classfile.BootClassLoader;
 import org.xyz.jvm.hotspot.src.share.vm.oops.InstanceKlass;
 import org.xyz.jvm.hotspot.src.share.vm.oops.MethodInfo;
+import org.xyz.jvm.jdk.classes.Handle;
 import org.xyz.jvm.jdk.classes.sun.misc.Unsafe;
 
 public class Main {
@@ -17,9 +19,8 @@ public class Main {
 
         org.xyz.jvm.jdk.Threads.createVm();
 
-        System.out.println(Unsafe.allocateMemory(80));
+        Handle klassHandle = AppClassLoader.loadKlass("org/xyz/jvm/example/HelloWorld");
 
-        System.out.println(Unsafe.allocateMemory(16));
 }
 
     public static void startJvm() {
