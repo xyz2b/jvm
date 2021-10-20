@@ -1,8 +1,5 @@
 package org.xyz.jvm.jdk.classes;
 
-import lombok.Data;
-
-@Data
 final public class Handle {
     // oop/klass的内存地址
     private long p;
@@ -13,4 +10,28 @@ final public class Handle {
 
     // 对应Java类的全限定名
     private String className;
+
+    public long getP() {
+        return p;
+    }
+
+    public void setP(long p) {
+        this.p = p;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getClassName() {
+        return className;
+    }
 }
