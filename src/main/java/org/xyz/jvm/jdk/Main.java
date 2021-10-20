@@ -1,5 +1,6 @@
 package org.xyz.jvm.jdk;
 
+import org.xyz.jvm.jdk.classes.JniEnv;
 import org.xyz.jvm.jdk.classes.sun.misc.AppClassLoader;
 import org.xyz.jvm.hotspot.src.share.vm.prims.JavaNativeInterface;
 import org.xyz.jvm.hotspot.src.share.vm.runtime.JavaThread;
@@ -21,6 +22,9 @@ public class Main {
 
         Handle klassHandle = AppClassLoader.loadKlass("org/xyz/jvm/example/HelloWorld");
 
+        Handle methodHandle = JniEnv.getMethodId(klassHandle, "main", "([Ljava/lang/String;)V");
+
+        JniEnv.callStaticVoidMethod(klassHandle, methodHandle);
 }
 
     public static void startJvm() {
