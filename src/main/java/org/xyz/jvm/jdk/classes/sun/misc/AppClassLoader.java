@@ -95,6 +95,8 @@ public class AppClassLoader {
         // 读取并解析Class文件
         klass = JniEnv.loadClassFile(searchPath + className);
 
+        saveLoadedKlass(className, klass);
+
         // 是否立刻解析
         if (resolve) {
             // 解析
