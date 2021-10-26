@@ -25,6 +25,8 @@ public class Main {
         Handle methodHandle = JniEnv.getMethodId(klassHandle, "main", "([Ljava/lang/String;)V");
 
         JniEnv.callStaticVoidMethod(klassHandle, methodHandle);
+
+
 }
 
     public static void startJvm() {
