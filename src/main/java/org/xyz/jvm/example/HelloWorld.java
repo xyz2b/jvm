@@ -1,7 +1,7 @@
 package org.xyz.jvm.example;
 
 
-public class HelloWorld {
+public class HelloWorld extends Father {
     public static int i = 1;
     public int a;
     public static long l = 100;

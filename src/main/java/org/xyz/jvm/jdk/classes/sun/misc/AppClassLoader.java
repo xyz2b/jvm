@@ -93,7 +93,7 @@ public class AppClassLoader {
         }
 
         // 读取并解析Class文件
-        klass = JniEnv.loadClassFile(searchPath + className);
+        klass = JniEnv.loadClassFile(className);
 
         saveLoadedKlass(className, klass);
 
