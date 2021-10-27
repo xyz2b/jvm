@@ -26,7 +26,7 @@ public class Main {
 
         JniEnv.callStaticVoidMethod(klassHandle, methodHandle);
 
-
+        System.out.println("执行结束");
 }
 
     public static void startJvm() {

@@ -17,7 +17,7 @@ public class HelloWorld extends Father {
         System.out.println(helloWorld.t);
         helloWorld.test(10);
         System.out.println(helloWorld.t);
-//        System.out.println("HelloWorld");
+        System.out.println(i);
     }
 }
 
