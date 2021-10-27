@@ -14,11 +14,17 @@ public class HelloWorld extends Father {
 
     public static void main(String[] args) {
         HelloWorld helloWorld = new HelloWorld();
-        i = 3;
-//        System.out.println(helloWorld.t);
-//        helloWorld.test(10);
-//        System.out.println(helloWorld.t);
-//        System.out.println(i);
+        System.out.println(i);
+        i = 2;
+        int b = i;
+        int c = helloWorld.t;
+
+        System.out.println(helloWorld.t);
+
+        helloWorld.test(10);
+        System.out.println(b);
+        System.out.println(helloWorld.t);
+
     }
 }
 
