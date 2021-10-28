@@ -4,11 +4,13 @@ public class Invoke {
 
     public static void main(String[] args) {
         int i = 10;
-        System.out.println(Other.toHexString(i));
+        Other o = new Other();
+//        o.toHexString(i);
+        System.out.println(o.toHexString(i));
 //        invokeStatic();
 
-        String s = new String("xyzjiao");
-        System.out.println(s);
+//        String s = new String("xyzjiao");
+//        System.out.println(s);
     }
 
     public static void invokeStatic() {

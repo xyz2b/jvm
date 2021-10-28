@@ -13,7 +13,10 @@ public class HelloWorld extends Father {
     }
 
     public static void main(String[] args) {
-        HelloWorld helloWorld = new HelloWorld();
+        String s = new String("xyzjiao");
+        System.out.println(s);
+
+//        HelloWorld helloWorld = new HelloWorld();
 //        int f = HelloWorld.it;
 //        System.out.println(f);
 //
@@ -37,9 +40,9 @@ public class HelloWorld extends Father {
 //        System.out.println(b);
 //        System.out.println(helloWorld.t);
 //
-        System.out.println(helloWorld.s);
-        helloWorld.s = 10;
-        System.out.println(helloWorld.s);
+//        System.out.println(helloWorld.s);
+//        helloWorld.s = 10;
+//        System.out.println(helloWorld.s);
 
 //        Father f = new Father();
 //        System.out.println(f.s);
