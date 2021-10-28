@@ -1,7 +1,7 @@
 package org.xyz.jvm.example;
 
 
-public class HelloWorld implements Test {
+public class HelloWorld extends Father {
     public static int i = 1;
     public int a;
     public static long l = 100;
@@ -11,8 +11,6 @@ public class HelloWorld implements Test {
         String s = new String("xyzjiao");
         System.out.println(s);
 
-        HelloWorld helloWorld = new HelloWorld();
-        helloWorld.test();
 
 //        HelloWorld helloWorld = new HelloWorld();
 //        int f = HelloWorld.it;
@@ -62,9 +60,5 @@ public class HelloWorld implements Test {
 //        System.out.println(Gran.it);
     }
 
-    @Override
-    public void test() {
-        System.out.println("test");
-    }
 }
 
