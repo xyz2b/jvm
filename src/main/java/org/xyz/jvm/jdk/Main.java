@@ -20,7 +20,7 @@ public class Main {
 
         org.xyz.jvm.jdk.classes.Threads.createVm();
 
-        Handle klassHandle = AppClassLoader.loadKlass("org/xyz/jvm/example/function/Invoke");
+        Handle klassHandle = AppClassLoader.loadKlass("org/xyz/jvm/example/HelloWorld");
 //        Handle klassHandle = AppClassLoader.loadKlass("org/xyz/jvm/example/HelloWorld");
 
         Handle methodHandle = JniEnv.getMethodId(klassHandle, "main", "([Ljava/lang/String;)V");

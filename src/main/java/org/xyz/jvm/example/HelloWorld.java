@@ -1,20 +1,18 @@
 package org.xyz.jvm.example;
 
 
-public class HelloWorld extends Father {
+public class HelloWorld implements Test {
     public static int i = 1;
     public int a;
     public static long l = 100;
     public int t = 1;
 
-    public int test(int i) {
-        t = i;
-        return t;
-    }
-
     public static void main(String[] args) {
         String s = new String("xyzjiao");
         System.out.println(s);
+
+        HelloWorld helloWorld = new HelloWorld();
+        helloWorld.test();
 
 //        HelloWorld helloWorld = new HelloWorld();
 //        int f = HelloWorld.it;
@@ -62,6 +60,11 @@ public class HelloWorld extends Father {
 //        System.out.println(Gran.it);
 //        Gran.it = 1;
 //        System.out.println(Gran.it);
+    }
+
+    @Override
+    public void test() {
+        System.out.println("test");
     }
 }
 
