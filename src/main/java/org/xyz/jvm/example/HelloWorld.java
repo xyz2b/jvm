@@ -8,8 +8,8 @@ public class HelloWorld extends Father {
     public int t = 1;
 
     public static void main(String[] args) {
-        String s = new String("xyzjiao");
-        System.out.println(s);
+//        String s = new String("xyzjiao");
+//        System.out.println(s);
 
 
         HelloWorld helloWorld = new HelloWorld();
@@ -30,15 +30,15 @@ public class HelloWorld extends Father {
 //        int b = i;
 //        int c = helloWorld.t;
 //
-//        System.out.println(helloWorld.t);
+        System.out.println(helloWorld.t);
 //
 //        helloWorld.test(10);
 //        System.out.println(b);
 //        System.out.println(helloWorld.t);
 //
-        System.out.println(helloWorld.s);
-        helloWorld.s = 10;
-        System.out.println(helloWorld.s);
+//        System.out.println(helloWorld.s);
+//        helloWorld.s = 10;
+//        System.out.println(helloWorld.s);
 
 //        Father f = new Father();
 //        System.out.println(f.s);
