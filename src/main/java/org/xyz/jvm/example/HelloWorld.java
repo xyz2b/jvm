@@ -11,12 +11,21 @@ public class HelloWorld extends Father {
         t = 10;
     }
 
+    public void hello() {
+        System.out.println(1);
+    }
+
     public static void main(String[] args) {
 //        String s = new String("xyzjiao");
 //        System.out.println(s);
 
 
         HelloWorld helloWorld = new HelloWorld();
+        Father father = new Father();
+        Gran gran = new Gran();
+        helloWorld.hello();
+        father.hello();
+        gran.hello();
 //        int f = HelloWorld.it;
 //        System.out.println(f);
 //
@@ -34,15 +43,19 @@ public class HelloWorld extends Father {
 //        int b = i;
 //        int c = helloWorld.t;
 ////
-//        System.out.println(helloWorld.t);
+        helloWorld.t();
+        System.out.println(helloWorld.t);
 ////
-//        helloWorld.test(10);
+        helloWorld.test(10);
 //        System.out.println(b);
-//        System.out.println(helloWorld.t);
+        System.out.println(helloWorld.t);
+        helloWorld.t();
+
 
         System.out.println(helloWorld.s);
-        helloWorld.s = 10;
-        System.out.println(helloWorld.s);
+        System.out.println(helloWorld.test());
+//        helloWorld.s = 10;
+//        System.out.println(helloWorld.s);
 
 //        Father f = new Father();
 //        System.out.println(f.s);
