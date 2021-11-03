@@ -29,20 +29,20 @@ public class HelloWorld extends Father {
 //        System.out.println(helloWorld.tt);
 
 
-        System.out.println(i);
-        i = 2;
-        int b = i;
-        int c = helloWorld.t;
-//
-        System.out.println(helloWorld.t);
-//
-        helloWorld.test(10);
-        System.out.println(b);
-        System.out.println(helloWorld.t);
+//        System.out.println(i);
+//        i = 2;
+//        int b = i;
+//        int c = helloWorld.t;
+////
+//        System.out.println(helloWorld.t);
+////
+//        helloWorld.test(10);
+//        System.out.println(b);
+//        System.out.println(helloWorld.t);
 
-//        System.out.println(helloWorld.s);
-//        helloWorld.s = 10;
-//        System.out.println(helloWorld.s);
+        System.out.println(helloWorld.s);
+        helloWorld.s = 10;
+        System.out.println(helloWorld.s);
 
 //        Father f = new Father();
 //        System.out.println(f.s);
