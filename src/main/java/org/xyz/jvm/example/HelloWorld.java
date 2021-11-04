@@ -1,11 +1,19 @@
 package org.xyz.jvm.example;
 
 
-public class HelloWorld extends Father {
+public class HelloWorld extends Father implements Test {
     public static int i = 1;
     public int a;
     public static long l = 100;
     public int t = 1;
+
+    public void test1() {
+        System.out.println("interface");
+    }
+
+    public void test2() {
+        System.out.println("interface2");
+    }
 
     public void test(int i) {
         t = 10;
@@ -18,7 +26,30 @@ public class HelloWorld extends Father {
     public static void main(String[] args) {
 //        String s = new String("xyzjiao");
 //        System.out.println(s);
+//
+//        Test test = new HelloWorld();
+//        test.test1();
+//
+//        Test2 test2 = new HelloWorld();
+//        test2.test1();
+//        test2.test2();
+//
+//        Test granTest = new Gran();
+//        granTest.test1();
+//
+//        Test2 granTest2 = new Gran();
+//        granTest2.test1();
+//        granTest2.test2();
+//
+//        Test faTest = new Father();
+//        faTest.test1();
+//
+//        Test2 faTest2 = new Father();
+//        faTest2.test1();
+//        faTest2.test2();
 
+//        Father hello = new HelloWorld();
+//        hello.hello();
 
         HelloWorld helloWorld = new HelloWorld();
         Father father = new Father();
@@ -42,18 +73,18 @@ public class HelloWorld extends Father {
 //        i = 2;
 //        int b = i;
 //        int c = helloWorld.t;
-////
-        helloWorld.t();
-        System.out.println(helloWorld.t);
-////
-        helloWorld.test(10);
+//
+//        helloWorld.t();
+//        System.out.println(helloWorld.t);
+//
+//        helloWorld.test(10);
 //        System.out.println(b);
-        System.out.println(helloWorld.t);
-        helloWorld.t();
+//        System.out.println(helloWorld.t);
+//        helloWorld.t();
 
 
-        System.out.println(helloWorld.s);
-        System.out.println(helloWorld.test());
+//        System.out.println(helloWorld.s);
+//        System.out.println(helloWorld.test());
 //        helloWorld.s = 10;
 //        System.out.println(helloWorld.s);
 

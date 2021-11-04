@@ -1,5 +1,6 @@
 package org.xyz.jvm.example;
 
 public interface Test {
-    public void test();
+    int i = 1;
+    public void test1();
 }
