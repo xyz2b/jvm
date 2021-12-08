@@ -1,7 +1,5 @@
 package org.xyz.jvm.example.lock;
 
-import sun.security.util.math.IntegerModuloP;
-
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
