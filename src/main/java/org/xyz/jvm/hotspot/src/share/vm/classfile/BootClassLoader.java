@@ -109,6 +109,8 @@ public class BootClassLoader {
 
     /**
      * 读取并解析Class文件
+     * @param className class全限定名
+     * @return InstanceKlass实例
      * */
     private static InstanceKlass readAndParse(String className) {
         String tmpName = className.replace(".", "/");
