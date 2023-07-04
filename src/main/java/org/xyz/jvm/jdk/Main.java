@@ -12,23 +12,25 @@ import org.xyz.jvm.jdk.classes.Handle;
 
 public class Main {
     public static void main(String[] args) {
+        // 以下是直接调用Java写的jvm代码
+        // class文件的搜索路径请修改 org.xyz.jvm.hotspot.src.share.vm.classfile.BootClassLoader.searchPath 属性
+        startJvm();
 
-//        startJvm();
-
+        // 以下是通过JNI手段，调用C++写的jvmplus代码               
 //        System.out.println(System.getProperty("java.library.path"));
-        System.loadLibrary("jni");
+//        System.loadLibrary("jni");
 
-        org.xyz.jvm.jdk.classes.Threads.createVm();
+//        org.xyz.jvm.jdk.classes.Threads.createVm();
 
 //        Handle klassHandle = AppClassLoader.loadKlass("org/xyz/jvm/example/HelloWorld");
-        Handle klassHandle = AppClassLoader.loadKlass("org/xyz/jvm/example/test/Test");
+//        Handle klassHandle = AppClassLoader.loadKlass("org/xyz/jvm/example/test/Test");
 //        Handle klassHandle = AppClassLoader.loadKlass("org/xyz/jvm/example/HelloWorld");
 
-        Handle methodHandle = JniEnv.getMethodId(klassHandle, "main", "([Ljava/lang/String;)V");
+//        Handle methodHandle = JniEnv.getMethodId(klassHandle, "main", "([Ljava/lang/String;)V");
 
-        JniEnv.callStaticVoidMethod(klassHandle, methodHandle);
+//        JniEnv.callStaticVoidMethod(klassHandle, methodHandle);
 
-        System.out.println("执行结束");
+//        System.out.println("执行结束");
 }
 
     public static void startJvm() {
